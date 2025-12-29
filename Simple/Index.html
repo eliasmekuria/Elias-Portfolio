@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elias - Portfolio</title>
+    <link rel="stylesheet" href="Stylesheet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Spline 3D Animation - Full Screen Background -->
+    <div class="spline-container">
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.98/build/spline-viewer.js"></script>
+        <spline-viewer url="scene.splinecode"></spline-viewer>
+    </div>
+
+    <!-- Info Card - Top Left -->
+    <div class="info-card">
+        <h1 class="card-name">Elias.</h1>
+        <div class="card-divider"></div>
+        <p class="card-greeting">
+            Hi, I'm <strong>Elias Nekuria</strong> - a designer based in New York City.
+        </p>
+        <div class="card-divider"></div>
+        <p class="card-bio">
+            I'm passionate about visually capturing ideas and communicating them effectively through graphic design, typography, and website design & development.
+        </p>
+        <div class="card-divider"></div>
+        <div class="card-links">
+            <a href="#" class="link-item">LinkedIn</a>
+            <a href="#" class="link-item">Behance</a>
+            <a href="#" class="link-item">Email</a>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-actions">
+            <a href="work.html" class="action-button">Work</a>
+            <a href="#" class="action-button ig-button">IG ↗</a>
+        </div>
+    </div>
+
+    <!-- Bottom Center Text -->
+    <div class="bottom-section">
+        <p class="interaction-hint">Click the Enter key in the 3D scene</p>
+    </div>
+
+    <script>
+        // Wait for Spline viewer to load
+        document.addEventListener('DOMContentLoaded', function() {
+            const viewer = document.querySelector('spline-viewer');
+            
+            if (viewer) {
+                viewer.addEventListener('load', () => {
+                    console.log('Spline scene loaded successfully');
+                });
+                
+                // Listen for mouse events from Spline
+                viewer.addEventListener('mouseDown', (e) => {
+                    console.log('Object clicked:', e.detail);
+                    
+                    // If you named your Enter key object in Spline, you can check for it here
+                    // Example: if the object name contains "Enter"
+                    if (e.detail && e.detail.target && e.detail.target.name) {
+                        const objectName = e.detail.target.name.toLowerCase();
+                        if (objectName.includes('enter') || objectName.includes('key')) {
+                            window.location.href = 'work.html';
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
