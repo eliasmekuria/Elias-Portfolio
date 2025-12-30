@@ -30,8 +30,8 @@
     
         <div class="card-divider"></div>
         <div class="card-actions">
-            <a src="https://www.linkedin.com/in/elias-mekuria/" class="action-button">LinkedIn</a>
-            <a href="#" class="action-button ig-button">IG↗</a>
+            <a href="https://www.linkedin.com/in/elias-mekuria/" class="action-button" target="_blank">LinkedIn</a>
+            <a href="mailto:elijahmekuria@gmail.com" class="action-button ig-button">Email↗</a>
         </div>
     </div>
 
@@ -42,33 +42,28 @@
 
     <script>
         let isNavigating = false;
-        const delayTime = 300; // 2 seconds - adjust this for longer/shorter animation
+        const delayTime = 300;
         
         document.addEventListener('DOMContentLoaded', function() {
             const viewer = document.querySelector('spline-viewer');
             const infoCard = document.getElementById('infoCard');
             const container = document.getElementById('splineContainer');
             
-            // Listen for clicks on the document
             document.addEventListener('click', (e) => {
-                // Don't navigate if already navigating
                 if (isNavigating) return;
                 
-                // Check if click is inside info card or its children
                 if (infoCard && infoCard.contains(e.target)) {
                     console.log('Click on info card - ignoring');
                     return;
                 }
                 
-                // Check if click is on or inside Spline container
                 if (e.target.tagName === 'SPLINE-VIEWER' || 
                     e.target.closest('.spline-container') ||
                     container.contains(e.target)) {
                     
-                    console.log('✅ Click on Spline keyboard detected!');
+                    console.log('Click on Spline keyboard detected!');
                     isNavigating = true;
                     
-                    // Update hint text
                     const hintText = document.querySelector('.interaction-hint');
                     if (hintText) {
                         hintText.textContent = 'Loading...';
@@ -76,19 +71,15 @@
                         hintText.style.opacity = '0';
                     }
                     
-                    // Navigate after delay
-                    console.log(`⏱️ Waiting ${delayTime}ms for animation...`);
                     setTimeout(() => {
-                        console.log('🚀 Navigating to work.html');
                         window.location.href = 'work.html';
                     }, delayTime);
                 }
             });
             
-            // Log when scene loads
             if (viewer) {
                 viewer.addEventListener('load', () => {
-                    console.log('✅ Spline scene loaded');
+                    console.log('Spline scene loaded');
                 });
             }
         });
