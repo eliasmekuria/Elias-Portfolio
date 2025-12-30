@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elias - Portfolio (Multi-Debug)</title>
+    <link rel="stylesheet" href="Stylesheet.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Ensure Spline container captures pointer events */
+        .spline-container {
+            pointer-events: auto !important;
+        }
+        
+        /* Make sure info card doesn't block Spline clicks */
+        .info-card {
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Spline 3D Animation - Full Screen Background -->
+    <div class="spline-container" id="splineContainer">
+        <script type="module" src="https://unpkg.com/@splinetool/viewer@latest/build/spline-viewer.js"></script>
+        <spline-viewer url="scene.splinecode" id="splineViewer"></spline-viewer>
+    </div>
+
+    <!-- Info Card - Top Left -->
+    <div class="info-card">
+        <h1 class="card-name">Elias.</h1>
+        <div class="card-divider"></div>
+        <p class="card-greeting">
+            Hi, I'm <strong>Elias Nekuria</strong> - a designer based in New York City.
+        </p>
+        <div class="card-divider"></div>
+        <p class="card-bio">
+            I'm passionate about visually capturing ideas and communicating them effectively through graphic design, typography, and website design & development.
+        </p>
+        <div class="card-divider"></div>
+        <div class="card-links">
+            <a href="#" class="link-item">LinkedIn</a>
+            <a href="#" class="link-item">Behance</a>
+            <a href="#" class="link-item">Email</a>
+        </div>
+        <div class="card-divider"></div>
+        <div class="card-actions">
+            <a href="work.html" class="action-button">Work</a>
+            <a href="#" class="action-button ig-button">IG ↗</a>
+        </div>
+    </div>
+
+    <!-- Bottom Center Text -->
+    <div class="bottom-section">
+        <p class="interaction-hint">Click anywhere on the keyboard - watching console (F12)</p>
+    </div>
+
+    <script>
+        console.log('========================================');
+        console.log('🚀 COMPREHENSIVE SPLINE DEBUG');
+        console.log('========================================');
+        
+        let isNavigating = false;
+        const delayTime = 2000; // 2 seconds
+        
+        function navigate() {
+            if (isNavigating) return;
+            isNavigating = true;
+            
+            console.log('✅ NAVIGATION TRIGGERED!');
+            console.log(`⏱️ Waiting ${delayTime}ms before navigating...`);
+            
+            const hintText = document.querySelector('.interaction-hint');
+            if (hintText) {
+                hintText.textContent = 'Navigating...';
+                hintText.style.transition = 'opacity 0.5s';
+                hintText.style.opacity = '0';
+            }
+            
+            setTimeout(() => {
+                console.log('🚀 Navigating to work.html NOW!');
+                window.location.href = 'work.html';
+            }, delayTime);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📄 DOM Content Loaded');
+            
+            const viewer = document.querySelector('spline-viewer');
+            const container = document.getElementById('splineContainer');
+            
+            console.log('Viewer element:', viewer);
+            console.log('Container element:', container);
+            
+            if (!viewer) {
+                console.error('❌ CRITICAL: No spline-viewer element found!');
+                return;
+            }
+            
+            // Method 1: Spline's built-in events
+            console.log('📡 Setting up Spline event listeners...');
+            
+            viewer.addEventListener('load', (e) => {
+                console.log('✅ Method 1: Spline LOAD event fired!');
+                console.log('Load event:', e);
+            });
+            
+            viewer.addEventListener('mouseDown', (e) => {
+                console.log('✅ Method 1: Spline mouseDown event fired!');
+                console.log('Event detail:', e.detail);
+                if (e.detail && e.detail.target) {
+                    console.log('Target name:', e.detail.target.name);
+                }
+                navigate();
+            });
+            
+            viewer.addEventListener('mouseUp', (e) => {
+                console.log('✅ Method 1: Spline mouseUp event fired!');
+                console.log('Event detail:', e.detail);
+            });
+            
+            // Method 2: Standard DOM click events on viewer
+            console.log('📡 Setting up standard DOM click listeners...');
+            
+            viewer.addEventListener('click', (e) => {
+                console.log('✅ Method 2: Standard CLICK on viewer!');
+                console.log('Click event:', e);
+                navigate();
+            });
+            
+            viewer.addEventListener('pointerdown', (e) => {
+                console.log('✅ Method 2: POINTERDOWN on viewer!');
+                console.log('Pointer event:', e);
+            });
+            
+            // Method 3: Click events on container
+            console.log('📡 Setting up container click listeners...');
+            
+            container.addEventListener('click', (e) => {
+                console.log('✅ Method 3: CLICK on container!');
+                console.log('Container click:', e);
+                navigate();
+            });
+            
+            // Method 4: Global document click (last resort)
+            document.addEventListener('click', (e) => {
+                console.log('📍 Global click detected on:', e.target.tagName);
+                if (e.target.tagName === 'SPLINE-VIEWER' || e.target.closest('.spline-container')) {
+                    console.log('✅ Method 4: Click is inside Spline area!');
+                    navigate();
+                }
+            });
+            
+            // Error handling
+            viewer.addEventListener('error', (e) => {
+                console.error('❌ Spline ERROR event:', e);
+            });
+            
+            console.log('========================================');
+            console.log('✅ All event listeners set up!');
+            console.log('🖱️ Now click anywhere on the keyboard...');
+            console.log('========================================');
+        });
+    </script>
+</body>
+</html>

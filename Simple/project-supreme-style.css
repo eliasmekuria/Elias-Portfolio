@@ -1,0 +1,311 @@
+@font-face {
+    font-family: RaptorText-Black;
+    src: url(font/RaptorText-Black.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Column 1: Left Sidebar - Fixed */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    background: #000000;
+    padding: 60px 30px;
+    z-index: 100;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.sidebar-intro {
+    font-size: 1.3em;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.sidebar-bio {
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: underline;
+    font-size: 0.9em;
+    transition: color 0.3s;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+}
+
+.back-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.3s;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.back-link:hover {
+    color: #ffffff;
+}
+
+/* Column 2: Freeform Canvas Area */
+.canvas-area {
+    margin-left: 280px;
+    padding: 60px;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+    align-items: start;
+}
+
+/* Asset Base Styles */
+.asset {
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.asset:hover {
+    transform: scale(1.01);
+}
+
+.asset img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Grid positioning for Supreme project */
+/* ROW 1: Full width hero GIF */
+.asset-1 { 
+    grid-column: span 12; 
+    grid-row: 1; 
+}
+
+/* ROW 2: Project info (left) + Description (right) */
+.asset-2 { 
+    grid-column: span 4; 
+    grid-row: 2; 
+}
+
+.asset-3 { 
+    grid-column: span 8; 
+    grid-row: 2; 
+}
+
+/* ROW 3-6: Cascading/Staggered Photos */
+/* Tall photo on LEFT (spans 2 rows) */
+.asset-4 { 
+    grid-column: 1 / span 6;
+    grid-row: 3 / span 3;
+}
+
+/* Small photo on RIGHT TOP */
+.asset-5 { 
+    grid-column: 7 / span 6;
+    grid-row: 3;
+}
+
+/* Tall photo on RIGHT (spans 2 rows) */
+.asset-6 { 
+    grid-column: 7 / span 6;
+    grid-row: 4 / span 3;
+}
+
+/* Small photo on LEFT BOTTOM */
+.asset-7-small { 
+    grid-column: 1 / span 6;
+    grid-row: 6;
+}
+
+/* ROW 7+: Full width magazine spreads */
+.asset-7 { 
+    grid-column: span 12; 
+    grid-row: 7; 
+}
+
+.asset-8 { 
+    grid-column: span 12; 
+    grid-row: 8; 
+}
+
+.asset-9 { 
+    grid-column: span 12; 
+    grid-row: 9; 
+}
+
+.asset-10 { 
+    grid-column: span 12; 
+    grid-row: 10; 
+}
+
+.asset-11 { 
+    grid-column: span 12; 
+    grid-row: 11; 
+}
+
+.asset-12 { 
+    grid-column: span 12; 
+    grid-row: 12; 
+}
+
+.asset-13 { 
+    grid-column: span 12; 
+    grid-row: 13; 
+}
+
+.asset-14 { 
+    grid-column: span 12; 
+    grid-row: 14; 
+}
+
+.asset-15 { 
+    grid-column: span 12; 
+    grid-row: 15; 
+}
+
+.asset-16 { 
+    grid-column: span 12; 
+    grid-row: 16; 
+}
+
+
+/* Cascade effects for staggered look */
+.cascade-left {
+    /* Positioned on left, spans 2 rows */
+}
+
+.cascade-right {
+    /* Positioned on right, single row */
+}
+
+.cascade-left-2 {
+    /* Second left item, offset further down */
+}
+
+/* Special styling for project info blocks */
+.project-info-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.project-info-title {
+    font-size: 1.8em;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #ffffff;
+    margin: 0;
+}
+
+.project-info-meta {
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.project-info-year {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+}
+
+.project-description-block {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.project-description-text {
+    font-size: 0.95em;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .sidebar {
+        width: 240px;
+    }
+    
+    .canvas-area {
+        margin-left: 240px;
+        padding: 50px 40px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 40px 30px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .canvas-area {
+        margin-left: 0;
+        padding: 40px 30px;
+    }
+    
+    /* Stack all assets vertically on tablet */
+    .asset-1, .asset-2, .asset-3, .asset-4, .asset-5, 
+    .asset-6, .asset-7, .asset-8, .asset-9, .asset-10 {
+        grid-column: span 12 !important;
+        grid-row: auto !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        padding: 30px 20px;
+    }
+    
+    .sidebar-intro {
+        font-size: 1.1em;
+    }
+    
+    .canvas-area {
+        padding: 30px 20px;
+    }
+    
+    .project-info-title {
+        font-size: 1.5em;
+    }
+}

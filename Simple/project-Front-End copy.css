@@ -1,0 +1,282 @@
+@font-face {
+    font-family: RaptorText-Black;
+    src: url(font/RaptorText-Black.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #000000;
+    color: #ffffff;
+    overflow-x: hidden;
+}
+
+/* Column 1: Left Sidebar - Fixed */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    background: #000000;
+    padding: 60px 30px;
+    z-index: 100;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+.sidebar-intro {
+    font-size: 1.3em;
+    font-weight: 400;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.sidebar-bio {
+    font-size: 0.9em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.sidebar-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: underline;
+    font-size: 0.9em;
+    transition: color 0.3s;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+}
+
+.back-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: color 0.3s;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.back-link:hover {
+    color: #ffffff;
+}
+
+/* Column 2: Freeform Canvas Area */
+.canvas-area {
+    margin-left: 280px;
+    padding: 60px;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 20px;
+    align-items: start;
+    grid-auto-flow: dense; /* Automatically fill gaps */
+}
+
+/* Asset Base Styles */
+.asset {
+    overflow: hidden;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.asset:hover {
+    transform: scale(1.01);
+}
+
+.asset img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Grid positioning - Sequential and easy to extend */
+
+/* ROW 1: Two items side by side (50% each) */
+.asset-1 { 
+    grid-column: span 12; 
+    grid-row: 1; 
+}
+
+.asset-2 { 
+    grid-column: span 6; 
+    grid-row: 2; 
+}
+
+/* ROW 2: Two items side by side (50% each) */
+.asset-3 { 
+    grid-column: span 6; 
+    grid-row: 2; 
+}
+
+.asset-4 { 
+    grid-column: span 6; 
+    grid-row: 2; 
+}
+
+/* ROW 3: Wide + Narrow (66% + 33%) */
+.asset-5 { 
+    grid-column: span 8; 
+    grid-row: 3; 
+}
+
+.asset-6 { 
+    grid-column: span 4; 
+    grid-row: 3; 
+}
+
+/* ROW 4: Two items side by side (50% each) - Add these when you need row 4 */
+.asset-7 { 
+    grid-column: span 6; 
+    grid-row: 4; 
+}
+
+.asset-8 { 
+    grid-column: span 6; 
+    grid-row: 4; 
+}
+
+/* ROW 5: Two items side by side (50% each) - Add these when you need row 5 */
+.asset-9 { 
+    grid-column: span 6; 
+    grid-row: 5; 
+}
+
+.asset-10 { 
+    grid-column: span 6; 
+    grid-row: 5; 
+}
+
+.asset-11 { grid-column: span 6; grid-row: 6; }
+.asset-12 { grid-column: span 6; grid-row: 6; }
+
+/* PATTERN TO ADD MORE ROWS:
+   Just continue the pattern - asset-11 & asset-12 in row 6, etc.
+   
+   .asset-11 { grid-column: span 6; grid-row: 6; }
+   .asset-12 { grid-column: span 6; grid-row: 6; }
+   
+   Or for different widths:
+   .asset-11 { grid-column: span 8; grid-row: 6; }  // Wide
+   .asset-12 { grid-column: span 4; grid-row: 6; }  // Narrow
+*/
+
+/* Helper classes for spanning multiple rows to fill gaps */
+.span-2-rows { 
+    grid-row: span 2 !important; 
+}
+
+.span-3-rows { 
+    grid-row: span 3 !important; 
+}
+
+/* Alternative: Use these if grid-auto-flow: dense doesn't work well */
+.tall { 
+    grid-row: span 2; 
+}
+
+.extra-tall { 
+    grid-row: span 3; 
+}
+
+/* Text styling for assets with descriptions */
+.asset-with-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.asset-with-text .asset-title {
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #ffffff;
+    line-height: 1.3;
+}
+
+.asset-with-text .asset-description {
+    font-size: 0.85em;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 20px;
+}
+
+.asset-with-text img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+
+/* Responsive Design */
+@media (max-width: 1400px) {
+    .sidebar {
+        width: 240px;
+    }
+    
+    .canvas-area {
+        margin-left: 240px;
+        padding: 50px 40px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 40px 30px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .canvas-area {
+        margin-left: 0;
+        padding: 40px 30px;
+    }
+    
+    /* Stack assets vertically on tablet */
+    .asset-1, .asset-2, .asset-3,
+    .asset-5, .asset-6,
+    .asset-7, .asset-8, .asset-9 {
+        width: 100%;
+        display: block;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        padding: 30px 20px;
+    }
+    
+    .sidebar-intro {
+        font-size: 1.1em;
+    }
+    
+    .canvas-area {
+        padding: 30px 20px;
+    }
+    
+    .asset {
+        margin-bottom: 20px;
+    }
+}
