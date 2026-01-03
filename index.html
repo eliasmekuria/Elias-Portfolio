@@ -11,13 +11,20 @@
     <link rel="icon" type="image/png" href="Img/favicon.png">
 </head>
 <body>
-    <!-- Spline 3D Animation - Full Screen Background -->
+    <script>
+        const isMobile = window.innerWidth <= 768;
+        sessionStorage.setItem('loadedScene', isMobile ? 'mobile' : 'desktop');
+    </script>
+
     <div class="spline-container" id="splineContainer">
         <script type="module" src="https://unpkg.com/@splinetool/viewer@latest/build/spline-viewer.js"></script>
-        <spline-viewer url="scene.splinecode"></spline-viewer>
+        <script>
+            const sceneFile = (window.innerWidth <= 768) ? 'scene-mobile.splinecode' : 'scene.splinecode';
+            document.write('<spline-viewer url="' + sceneFile + '"></spline-viewer>');
+            console.log('Loading scene: ' + sceneFile);
+        </script>
     </div>
-
-    <!-- Info Card - Top Left -->
+    
     <div class="info-card" id="infoCard">
         <h1 class="card-name">Elias.</h1>
         <div class="card-divider"></div>
@@ -28,61 +35,84 @@
         <p class="card-bio">
             I'm exploring the intersection of AI and design to create smarter, faster workflows - using intelligent tools to push the boundaries of what's possible in visual communication and digital experiences.
         </p>
-    
         <div class="card-divider"></div>
         <div class="card-actions">
             <a href="https://www.linkedin.com/in/elias-mekuria/" class="action-button" target="_blank">LinkedIn</a>
-            <a href="mailto:elijahmekuria@gmail.com" class="action-button ig-button">Email↗</a>
+            <a href="mailto:elijahmekuria@gmail.com" class="action-button">Email↗</a>
         </div>
     </div>
-
-    <!-- Bottom Center Text -->
+    
     <div class="bottom-section">
-        <p class="interaction-hint">Click the Enter key to continue</p>
+        <p class="interaction-hint">Tap the keyboard to continue</p>
     </div>
 
     <script>
-        let isNavigating = false;
-        const delayTime = 300;
+        var isNavigating = false;
+        var clicksEnabled = false;
         
         document.addEventListener('DOMContentLoaded', function() {
-            const viewer = document.querySelector('spline-viewer');
-            const infoCard = document.getElementById('infoCard');
-            const container = document.getElementById('splineContainer');
+            var viewer = document.querySelector('spline-viewer');
+            var infoCard = document.getElementById('infoCard');
+            var container = document.getElementById('splineContainer');
             
-            document.addEventListener('click', (e) => {
-                if (isNavigating) return;
-                
-                if (infoCard && infoCard.contains(e.target)) {
-                    console.log('Click on info card - ignoring');
-                    return;
-                }
+            // Wait 1.5 seconds then enable clicks
+            setTimeout(function() {
+                clicksEnabled = true;
+                console.log('✅ Clicks enabled');
+            }, 1500);
+            
+            document.addEventListener('click', function(e) {
+                if (isNavigating || !clicksEnabled) return;
+                if (infoCard && infoCard.contains(e.target)) return;
                 
                 if (e.target.tagName === 'SPLINE-VIEWER' || 
-                    e.target.closest('.spline-container') ||
+                    e.target.tagName === 'CANVAS' ||
                     container.contains(e.target)) {
                     
-                    console.log('Click on Spline keyboard detected!');
+                    console.log('✅ Navigating...');
                     isNavigating = true;
                     
-                    const hintText = document.querySelector('.interaction-hint');
+                    var hintText = document.querySelector('.interaction-hint');
                     if (hintText) {
                         hintText.textContent = 'Loading...';
-                        hintText.style.transition = 'opacity 0.5s';
                         hintText.style.opacity = '0';
                     }
                     
-                    setTimeout(() => {
+                    setTimeout(function() {
                         window.location.href = 'work.html';
-                    }, delayTime);
+                    }, 300);
                 }
             });
             
-            if (viewer) {
-                viewer.addEventListener('load', () => {
-                    console.log('Spline scene loaded');
-                });
-            }
+            document.addEventListener('touchend', function(e) {
+                if (isNavigating || !clicksEnabled) return;
+                if (infoCard && infoCard.contains(e.target)) return;
+                
+                if (e.target.tagName === 'SPLINE-VIEWER' || 
+                    e.target.tagName === 'CANVAS' ||
+                    container.contains(e.target)) {
+                    
+                    isNavigating = true;
+                    var hintText = document.querySelector('.interaction-hint');
+                    if (hintText) hintText.style.opacity = '0';
+                    
+                    setTimeout(function() {
+                        window.location.href = 'work.html';
+                    }, 300);
+                }
+            });
+            
+            window.addEventListener('resize', function() {
+                setTimeout(function() {
+                    var currentIsMobile = window.innerWidth <= 768;
+                    var loadedScene = sessionStorage.getItem('loadedScene');
+                    var currentSceneType = currentIsMobile ? 'mobile' : 'desktop';
+                    
+                    if (loadedScene && loadedScene !== currentSceneType) {
+                        location.reload();
+                    }
+                }, 500);
+            });
         });
     </script>
 </body>

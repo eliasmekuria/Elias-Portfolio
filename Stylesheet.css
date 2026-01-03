@@ -3,6 +3,33 @@
     src: url(font/RaptorText-Black.ttf);
 }
 
+/* Hide Spline orbit controls (joysticks) and branding */
+spline-viewer::part(orbit-controls) {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+spline-viewer::part(logo) {
+    display: none !important;
+}
+
+/* Target the controls directly within shadow DOM */
+.spline-container spline-viewer {
+    --orbit-controls-display: none;
+}
+
+/* Hide any canvas overlay controls */
+.spline-container canvas + * {
+    display: none !important;
+}
+
+/* Nuclear option - hide all absolute positioned elements in Spline viewer except canvas */
+spline-viewer > *:not(canvas) {
+    display: none !important;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -26,6 +53,10 @@ body {
     width: 100vw;
     height: 100vh;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible; /* Allow keyboard to extend beyond if needed */
 }
 
 .spline-container canvas {
@@ -34,7 +65,12 @@ body {
     display: block;
 }
 
-/* Info Card - Top Left */
+/* Allow spline-viewer to overflow */
+.spline-container spline-viewer {
+    overflow: visible !important;
+}
+
+/* Info Card - Desktop: Top Left, Mobile: Centered Top */
 .info-card {
     position: absolute;
     top: 50px;
@@ -44,6 +80,7 @@ body {
     border-radius: 8px;
     padding: 20px;
     width: 450px;
+    max-width: calc(100vw - 100px);
     z-index: 100;
     font-family: Arial, sans-serif;
     color: #ffffff;
@@ -56,6 +93,7 @@ body {
     margin: 0;
     line-height: 1;
     font-family: RaptorText-Black, Arial, sans-serif;
+    
 }
 
 /* Horizontal Dividers */
@@ -71,23 +109,6 @@ body {
     font-size: 0.95em;
     line-height: 1.5;
     margin: 0;
-}
-
-/* Links Section */
-.card-links {
-    display: flex;
-    flex-direction: column;
-}
-
-.link-item {
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    font-size: 0.9em;
-    margin-bottom: 4px;
-}
-
-.link-item:hover {
-    color: #ffffff;
 }
 
 /* Actions (Buttons) */
@@ -124,29 +145,147 @@ body {
     transform: translateX(-50%);
     text-align: center;
     z-index: 10;
+    transition: opacity 0.3s;
 }
 
 .interaction-hint {
     font-size: 16px;
     font-weight: 400;
-    color: rgba(255, 255, 255, 0.505);
+    color: rgba(255, 255, 255, 0.6);
     margin-bottom: 12px;
 }
 
-/* Responsive Design */
-@media (max-width: 768px) {
+/* Tablet Breakpoint (768px - 1024px) */
+@media (max-width: 1024px) {
     .info-card {
-        top: 30px;
-        left: 30px;
-        right: 30px;
-        width: auto;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 90%;
+        max-width: 500px;
     }
 
     .card-name {
-        font-size: 6em;
+        font-size: 7em;
     }
 
     .bottom-section {
         bottom: 40px;
+    }
+}
+
+/* Mobile Breakpoint (under 768px) */
+@media (max-width: 768px) {
+    /* Scale down spline viewer on mobile to fit better */
+    .spline-container spline-viewer {
+        transform: scale(0.75);
+        transform-origin: center;
+    }
+    
+    /* Hide orbit controls */
+    spline-viewer::part(orbit-controls) {
+        display: none !important;
+    }
+    
+    /* Smaller, more compact info card at top */
+    .info-card {
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: calc(100% - 40px);
+        max-width: 360px; /* Narrower */
+        padding: 15px; /* Less padding */
+    }
+    
+    .card-name {
+        font-size: em; /* Smaller */
+        text-align: center; /* Center on mobile */
+    }
+    
+    .card-greeting,
+    .card-bio {
+        font-size: 0.85em; /* Smaller text */
+        text-align: center; /* Center on mobile */
+    }
+    
+    .card-divider {
+        margin: 10px 0; /* Tighter spacing */
+    }
+    
+    .card-actions {
+        flex-direction: column;
+        gap: 6px; /* Tighter */
+    }
+    
+    .action-button {
+        width: 100%;
+        padding: 10px 16px; /* Smaller buttons */
+        font-size: 0.9em;
+    }
+    
+    .bottom-section {
+        bottom: 30px;
+    }
+}
+
+    .card-name {
+        font-size: ;
+        text-align: left;
+    }
+
+    .card-greeting,
+    .card-bio {
+        font-size: 0.9em;
+        text-align: left;
+    }
+
+    .card-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .action-button {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 0.95em;
+    }
+
+    .bottom-section {
+        bottom: 30px;
+    }
+
+    .interaction-hint {
+        font-size: 14px;
+    }
+}
+
+/* Small Mobile (under 480px) */
+@media (max-width: 480px) {
+    .info-card {
+        top: 15px;
+        width: calc(100% - 30px);
+        max-width: 340px;
+        padding: 12px;
+    }
+
+    .card-name {
+        font-size: 3.5em; /* Even smaller */
+    }
+
+    .card-greeting,
+    .card-bio {
+        font-size: 0.8em;
+    }
+
+    .card-divider {
+        margin: 8px 0;
+    }
+
+    .bottom-section {
+        bottom: 20px;
+    }
+
+    .interaction-hint {
+        font-size: 13px;
     }
 }

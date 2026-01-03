@@ -16,7 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* Column 1: Left Sidebar - Fixed (Page Info) */
+/* Column 1: Left Sidebar - Fixed (Desktop) */
 .sidebar {
     position: fixed;
     left: 0;
@@ -65,14 +65,14 @@ body {
     color: #ffffff;
 }
 
-/* Main Content Area (Columns 2 & 3) */
+/* Main Content Area */
 .main-content {
     margin-left: 280px;
     padding: 60px 0;
     min-height: 100vh;
 }
 
-/* Project Row - Contains Column 2 (Info) and Column 3 (Image) */
+/* Project Row - Contains Info + Image */
 .project-row {
     display: grid;
     grid-template-columns: 350px 1fr;
@@ -86,7 +86,7 @@ body {
     margin-bottom: 60px;
 }
 
-/* Column 2: Project Info */
+/* Project Info */
 .project-info {
     padding-top: 10px;
 }
@@ -118,13 +118,15 @@ body {
     font-size: 0.9em;
     transition: opacity 0.3s;
     display: inline-block;
+    padding: 10px 0;
+    min-height: 44px; /* Touch target size */
 }
 
 .project-link:hover {
     opacity: 0.7;
 }
 
-/* Column 3: Large Project Image */
+/* Project Image */
 .project-image {
     position: relative;
     width: 100%;
@@ -138,6 +140,10 @@ body {
     transform: scale(1.01);
 }
 
+.project-image a {
+    display: block;
+}
+
 .project-image img {
     width: 100%;
     height: auto;
@@ -145,23 +151,7 @@ body {
     object-fit: cover;
 }
 
-/* Responsive Design */
-@media (max-width: 1400px) {
-    .sidebar {
-        width: 240px;
-    }
-    
-    .main-content {
-        margin-left: 240px;
-    }
-    
-    .project-row {
-        grid-template-columns: 300px 1fr;
-        gap: 40px;
-        padding: 0 40px;
-    }
-}
-
+/* Tablet Breakpoint (768px - 1024px) */
 @media (max-width: 1024px) {
     .sidebar {
         position: relative;
@@ -185,17 +175,31 @@ body {
     }
 }
 
+/* Mobile Breakpoint (under 768px) */
 @media (max-width: 768px) {
     .sidebar {
         padding: 30px 20px;
     }
     
     .sidebar-intro {
-        font-size: 1.1em;
+        font-size: 1.2em;
     }
     
     .sidebar-bio {
-        font-size: 0.85em;
+        font-size: 0.9em;
+    }
+    
+    .sidebar-links {
+        flex-direction: row;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    
+    .sidebar-link {
+        font-size: 0.95em;
+        min-height: 44px; /* Touch target */
+        display: inline-flex;
+        align-items: center;
     }
     
     .main-content {
@@ -205,10 +209,50 @@ body {
     .project-row {
         padding: 0 20px;
         margin-bottom: 60px;
+        gap: 20px;
     }
     
     .project-title {
-        font-size: 1.5em;
+        font-size: 1.6em;
+    }
+    
+    .project-meta {
+        font-size: 0.85em;
+    }
+    
+    .project-description {
+        font-size: 0.95em;
+        line-height: 1.6;
+    }
+    
+    .project-link {
+        font-size: 0.95em;
+        min-height: 44px;
+    }
+    
+    /* Make images more touch-friendly */
+    .project-image {
+        border-radius: 4px;
+    }
+}
+
+/* Small Mobile (under 480px) */
+@media (max-width: 480px) {
+    .sidebar {
+        padding: 20px 15px;
+    }
+    
+    .sidebar-intro {
+        font-size: 1.1em;
+    }
+    
+    .project-row {
+        padding: 0 15px;
+        margin-bottom: 50px;
+    }
+    
+    .project-title {
+        font-size: 1.4em;
     }
     
     .project-description {
