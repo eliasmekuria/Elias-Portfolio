@@ -14,6 +14,7 @@
     <script>
         const isMobile = window.innerWidth <= 768;
         sessionStorage.setItem('loadedScene', isMobile ? 'mobile' : 'desktop');
+        console.log('Device:', isMobile ? 'MOBILE' : 'DESKTOP');
     </script>
 
     <div class="spline-container" id="splineContainer">
@@ -21,7 +22,7 @@
         <script>
             const sceneFile = (window.innerWidth <= 768) ? 'scene-mobile.splinecode' : 'scene.splinecode';
             document.write('<spline-viewer url="' + sceneFile + '"></spline-viewer>');
-            console.log('Loading scene: ' + sceneFile);
+            console.log('Loading scene:', sceneFile);
         </script>
     </div>
     
@@ -48,71 +49,64 @@
 
     <script>
         var isNavigating = false;
-        var clicksEnabled = false;
+        
+        // GLOBAL click listener to see ALL clicks
+        document.addEventListener('click', function(e) {
+            console.log('=== GLOBAL CLICK ===');
+            console.log('Target:', e.target);
+            console.log('Target tag:', e.target.tagName);
+            console.log('Target class:', e.target.className);
+            console.log('==================');
+        }, true); // Use capture phase
         
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Loaded');
+            
             var viewer = document.querySelector('spline-viewer');
             var infoCard = document.getElementById('infoCard');
             var container = document.getElementById('splineContainer');
             
-            // Wait 1.5 seconds then enable clicks
-            setTimeout(function() {
-                clicksEnabled = true;
-                console.log('✅ Clicks enabled');
-            }, 1500);
+            console.log('Viewer element:', viewer);
+            console.log('Container element:', container);
             
-            document.addEventListener('click', function(e) {
-                if (isNavigating || !clicksEnabled) return;
-                if (infoCard && infoCard.contains(e.target)) return;
+            // Click handler
+            function handleClick(e) {
+                console.log('>>> handleClick fired');
+                console.log('>>> Click target:', e.target.tagName);
                 
-                if (e.target.tagName === 'SPLINE-VIEWER' || 
-                    e.target.tagName === 'CANVAS' ||
-                    container.contains(e.target)) {
-                    
-                    console.log('✅ Navigating...');
-                    isNavigating = true;
-                    
-                    var hintText = document.querySelector('.interaction-hint');
-                    if (hintText) {
-                        hintText.textContent = 'Loading...';
-                        hintText.style.opacity = '0';
-                    }
-                    
-                    setTimeout(function() {
-                        window.location.href = 'work.html';
-                    }, 300);
+                if (isNavigating) {
+                    console.log('>>> Already navigating');
+                    return;
                 }
-            });
-            
-            document.addEventListener('touchend', function(e) {
-                if (isNavigating || !clicksEnabled) return;
-                if (infoCard && infoCard.contains(e.target)) return;
                 
-                if (e.target.tagName === 'SPLINE-VIEWER' || 
-                    e.target.tagName === 'CANVAS' ||
-                    container.contains(e.target)) {
-                    
-                    isNavigating = true;
-                    var hintText = document.querySelector('.interaction-hint');
-                    if (hintText) hintText.style.opacity = '0';
-                    
-                    setTimeout(function() {
-                        window.location.href = 'work.html';
-                    }, 300);
+                if (infoCard && infoCard.contains(e.target)) {
+                    console.log('>>> Info card click - ignoring');
+                    return;
                 }
-            });
+                
+                var isSplineArea = e.target.tagName === 'SPLINE-VIEWER' || 
+                                   e.target.tagName === 'CANVAS' ||
+                                   (container && container.contains(e.target) && !infoCard.contains(e.target));
+                
+                console.log('>>> Is Spline area?', isSplineArea);
+                
+                if (isSplineArea) {
+                    console.log('>>> ✅ NAVIGATING!');
+                    isNavigating = true;
+                    window.location.href = 'work.html';
+                }
+            }
             
-            window.addEventListener('resize', function() {
-                setTimeout(function() {
-                    var currentIsMobile = window.innerWidth <= 768;
-                    var loadedScene = sessionStorage.getItem('loadedScene');
-                    var currentSceneType = currentIsMobile ? 'mobile' : 'desktop';
-                    
-                    if (loadedScene && loadedScene !== currentSceneType) {
-                        location.reload();
-                    }
-                }, 500);
-            });
+            document.addEventListener('click', handleClick);
+            document.addEventListener('touchend', handleClick);
+            
+            console.log('Event listeners attached');
+            
+            if (viewer) {
+                viewer.addEventListener('load', function() {
+                    console.log('✅ Spline scene loaded');
+                });
+            }
         });
     </script>
 </body>
