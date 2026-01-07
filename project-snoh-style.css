@@ -303,27 +303,32 @@ body {
     .canvas-area {
         margin-left: 0;
         padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    /* Reset grid positioning for all assets */
+    .hero-image,
+    .project-info-section,
+    .plan-section,
+    .color-palette-section,
+    .description-continuation,
+    .moodboard-title,
+    .moodboard-col,
+    .full-width,
+    .asset-7, .asset-8, .asset-9,
+    .asset-10, .asset-11, .asset-12,
+    .asset-13, .asset-14, .asset-15 {
+        grid-column: unset;
+        grid-row: unset;
+        width: 100%;
     }
     
     /* Stack project info section */
     .project-info-section {
         grid-template-columns: 1fr;
         gap: 20px;
-    }
-    
-    /* Stack plan and color palette */
-    .plan-section,
-    .color-palette-section {
-        grid-column: span 12 !important;
-    }
-    
-    /* Stack moodboard to 2 columns on tablet */
-    .moodboard-col {
-        grid-column: span 6 !important;
-    }
-    
-    .asset-9 {
-        grid-column: span 12 !important;
     }
 }
 
@@ -338,6 +343,7 @@ body {
     
     .canvas-area {
         padding: 30px 20px;
+        gap: 15px;
     }
     
     .project-info-title {
@@ -346,10 +352,5 @@ body {
     
     .section-title {
         font-size: 1.1em;
-    }
-    
-    /* Single column moodboard on mobile */
-    .moodboard-col {
-        grid-column: span 12 !important;
     }
 }

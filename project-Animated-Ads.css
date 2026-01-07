@@ -181,16 +181,17 @@ body {
     .canvas-area {
         margin-left: 0;
         padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
     
     /* Stack assets vertically on tablet */
-    .asset-1, .asset-2, .asset-3,
-    .asset-5, .asset-6,
-    .asset-7, .asset-8, .asset-9 {
+    .asset-1, .asset-2, .asset-3, .asset-4,
+    .asset-5, .asset-6, .asset-7, .asset-8, .asset-9 {
+        grid-column: unset;
+        grid-row: unset;
         width: 100%;
-        display: block;
-        margin-right: 0;
-        margin-bottom: 20px;
     }
 }
 
@@ -205,9 +206,6 @@ body {
     
     .canvas-area {
         padding: 30px 20px;
-    }
-    
-    .asset {
-        margin-bottom: 20px;
+        gap: 15px;
     }
 }

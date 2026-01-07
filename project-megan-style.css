@@ -234,12 +234,17 @@ body {
     .canvas-area {
         margin-left: 0;
         padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
     
-    /* Stack all assets vertically on tablet */
+    /* Reset grid positioning for all assets */
     .asset-1, .asset-2, .asset-3, .asset-4,
     .asset-5, .asset-6, .asset-7, .asset-8, .asset-9 {
-        grid-column: span 12 !important;
+        grid-column: unset;
+        grid-row: unset;
+        width: 100%;
     }
 }
 
@@ -254,6 +259,7 @@ body {
     
     .canvas-area {
         padding: 30px 20px;
+        gap: 15px;
     }
     
     .project-info-title {

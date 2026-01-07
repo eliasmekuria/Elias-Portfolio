@@ -242,19 +242,32 @@ body {
     .canvas-area {
         margin-left: 0;
         padding: 40px 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
     }
     
-    /* Stack description blocks and make photo grid 2 columns on tablet */
-    .asset-2, .asset-3 {
-        grid-column: span 12 !important;
+    /* Reset grid positioning for all assets */
+    .video-container,
+    .asset-2, .asset-3,
+    .asset-4, .asset-5, .asset-6,
+    .asset-7, .asset-8, .asset-9,
+    .asset-10, .asset-11, .asset-12,
+    .asset-13, .asset-14, .asset-15,
+    .asset-16, .asset-17, .asset-18,
+    .asset-19, .asset-20, .asset-21,
+    .asset-22, .asset-23, .asset-24 {
+        grid-column: unset;
+        grid-row: unset;
+        width: 100%;
     }
     
     .photo-grid {
-        grid-column: span 6 !important;
+        grid-column: unset;
     }
     
     .full-width {
-        grid-column: span 12 !important;
+        grid-column: unset;
     }
 }
 
@@ -269,14 +282,10 @@ body {
     
     .canvas-area {
         padding: 30px 20px;
+        gap: 15px;
     }
     
     .project-info-title {
         font-size: 1.5em;
-    }
-    
-    /* Single column on mobile */
-    .photo-grid {
-        grid-column: span 12 !important;
     }
 }
