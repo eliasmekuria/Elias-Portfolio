@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dial - Case Study</title>
+<link rel="stylesheet" href="project-zillow-style.css">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;0,9..144,400;1,9..144,200;1,9..144,300&family=Geist:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+/* ── Tokens ── */
+:root {
+  --bg-base:        #0a0a0b;
+  --bg-surface:     #111113;
+  --bg-elevated:    #18181b;
+  --bg-overlay:     #1f1f23;
+  --border-subtle:  rgba(255,255,255,0.05);
+  --border-default: rgba(255,255,255,0.09);
+  --border-strong:  rgba(255,255,255,0.16);
+  --gold-300: #fde68a;
+  --gold-400: #f5c842;
+  --gold-500: #d4a017;
+  --gold-600: #b7860e;
+  --gold-900: #2a1f03;
+  --green-400: #4ade80;
+  --green-500: #22c55e;
+  --green-900: #052e16;
+  --red-400: #f87171;
+  --red-500: #ef4444;
+  --red-900: #2d0a0a;
+  --amber-400: #fbbf24;
+  --amber-900: #1c1000;
+  --text-primary:   #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-tertiary:  #71717a;
+  --text-gold:      #d4a017;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Geist', sans-serif;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ── Grain overlay ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.4;
+}
+
+/* ── Layout ── */
+.page { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
+body { padding-left: 280px; }
+
+/* ── Section spacing ── */
+section { padding: 120px 0; border-bottom: 1px solid var(--border-subtle); }
+section:last-of-type { border-bottom: none; }
+
+/* ── Section label ── */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 56px;
+}
+.section-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: var(--text-gold);
+}
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border-default);
+}
+.section-title-sm {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ── Typography (scoped to main content only) ── */
+section h1, section h2, section h3,
+footer h1, footer h2, footer h3 {
+  font-family: 'Fraunces', serif;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+section h1, footer h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
+section h2, footer h2 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
+section h3, footer h3 { font-size: 1.25rem; }
+section em { font-style: italic; color: var(--text-gold); }
+
+section p {
+  color: var(--text-secondary);
+  max-width: 60ch;
+  line-height: 1.7;
+}
+
+/* ── Hero ── */
+#hero {
+  padding-top: 100px;
+  padding-bottom: 120px;
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+  overflow: hidden;
+}
+.hero-inner { position: relative; z-index: 1; }
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-gold);
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--gold-500);
+}
+.hero-headline { margin-bottom: 32px; }
+.hero-headline span {
+  display: block;
+  color: var(--text-tertiary);
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  font-weight: 200;
+}
+.hero-body {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  max-width: 52ch;
+  margin-bottom: 48px;
+  line-height: 1.75;
+}
+.hero-meta {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.hero-meta-item {}
+.hero-meta-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+.hero-meta-value {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+/* Radial glow */
+.hero-glow {
+  position: absolute;
+  top: -200px;
+  right: -200px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(212,160,23,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Hero image zone ── */
+.hero-image-zone {
+  margin-top: 80px;
+  position: relative;
+}
+.screen-placeholder {
+  width: 100%;
+  border-radius: 16px;
+  border: 1px solid var(--border-default);
+  overflow: hidden;
+  position: relative;
+  background: var(--bg-surface);
+  box-shadow: 0 32px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
+}
+.screen-placeholder img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.screen-placeholder-empty {
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+}
+.placeholder-icon {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+}
+.placeholder-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.placeholder-sublabel {
+  font-size: 0.75rem;
+  color: var(--text-disabled, #3f3f46);
+  margin-top: 4px;
+}
+.screen-label {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: rgba(10,10,11,0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+/* ── Problem section ── */
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+.problem-body { margin-bottom: 40px; }
+.user-block {
+  padding: 28px;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  background: var(--bg-surface);
+}
+.user-block-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-gold);
+  margin-bottom: 16px;
+}
+.user-block p { font-size: 0.875rem; max-width: none; }
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 40px;
+}
+.feature-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--bg-surface);
+  transition: border-color 200ms ease;
+}
+.feature-item:hover { border-color: var(--border-default); }
+.feature-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-500);
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.feature-name {
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.feature-desc {
+  font-size: 0.8125rem;
+  color: var(--text-tertiary);
+  max-width: none;
+  line-height: 1.5;
+}
+
+/* ── Design system section ── */
+.atomic-ladder {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 64px;
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.ladder-step {
+  flex: 1;
+  padding: 24px 20px;
+  border-right: 1px solid var(--border-subtle);
+  position: relative;
+  background: var(--bg-surface);
+  transition: background 200ms ease;
+}
+.ladder-step:last-child { border-right: none; }
+.ladder-step:hover { background: var(--bg-elevated); }
+.ladder-tier {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-gold);
+  margin-bottom: 8px;
+}
+.ladder-name {
+  font-family: 'Fraunces', serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.ladder-desc {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+.ladder-example {
+  margin-top: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+}
+.ladder-arrow {
+  position: absolute;
+  right: -1px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--border-strong);
+  font-size: 0.875rem;
+  z-index: 1;
+}
+.ds-body-cols {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+.ds-principle {
+  padding: 24px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--bg-surface);
+  margin-bottom: 16px;
+}
+.ds-principle-title {
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.ds-principle p { font-size: 0.8125rem; max-width: none; line-height: 1.55; }
+
+/* ── Tokens section ── */
+.token-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 64px;
+}
+.token-block {}
+.token-block-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+}
+.color-ramp {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.swatch {
+  flex: 1;
+  height: 36px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 4px;
+}
+.swatch-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.06em;
+  color: rgba(0,0,0,0.5);
+  line-height: 1;
+}
+.swatch-label.light { color: rgba(255,255,255,0.5); }
+.chain-diagram {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.chain-token {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--text-secondary);
+  background: var(--bg-elevated);
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border-subtle);
+}
+.chain-token.semantic { color: var(--text-gold); border-color: rgba(212,160,23,0.2); background: rgba(212,160,23,0.05); }
+.chain-arrow { color: var(--text-tertiary); font-size: 0.75rem; }
+.chain-swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.type-scale {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.type-row {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 12px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+.type-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  min-width: 80px;
+  flex-shrink: 0;
+}
+.type-sample {
+  color: var(--text-primary);
+  font-family: 'Geist', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.token-decision {
+  padding: 20px 24px;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  background: var(--bg-surface);
+  margin-bottom: 12px;
+  display: flex;
+  gap: 16px;
+}
+.token-decision-q {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-gold);
+  margin-bottom: 6px;
+}
+.token-decision p { font-size: 0.8125rem; max-width: none; }
+
+/* ── Components section ── */
+.component-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background: var(--border-subtle);
+  border-radius: 14px;
+  overflow: hidden;
+  margin-bottom: 48px;
+}
+.component-cell {
+  background: var(--bg-overlay);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 140px;
+}
+.component-cell-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+.component-cell img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Micro badge previews */
+.badge-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.badge {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+}
+.badge.holding { background: var(--amber-900); color: var(--amber-400); border: 1px solid rgba(251,191,36,0.2); }
+.badge.listed  { background: var(--blue-900, #0f1f3d); color: #93c5fd; border: 1px solid rgba(147,197,253,0.2); }
+.badge.sold    { background: var(--green-900); color: var(--green-400); border: 1px solid rgba(74,222,128,0.2); }
+
+/* Micro button previews */
+.btn-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+}
+.btn-preview.primary {
+  background: var(--gold-500);
+  color: #09090b;
+}
+.btn-preview.ghost {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-primary);
+}
+.btn-preview.destructive {
+  background: transparent;
+  border: 1px solid rgba(239,68,68,0.3);
+  color: var(--red-400);
+}
+
+/* Watch card preview */
+.watch-card-preview {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.watch-thumb-sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  background: var(--bg-overlay);
+  border: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-tertiary);
+  font-size: 1.25rem;
+}
+.watch-card-body {}
+.watch-card-ref {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--text-tertiary);
+  margin-bottom: 2px;
+}
+.watch-card-name {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.watch-card-price {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+.watch-card-delta {
+  margin-left: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--green-400);
+}
+
+/* Stat card preview */
+.stat-card-preview {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  padding: 16px;
+}
+.stat-card-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+.stat-card-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+.stat-card-delta {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--green-400);
+  margin-top: 4px;
+}
+
+/* Sparkline preview */
+.sparkline-preview { width: 100%; height: 40px; }
+
+/* Comp row preview */
+.comp-row-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+.comp-source-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 7px;
+  border-radius: 4px;
+  background: rgba(212,160,23,0.08);
+  border: 1px solid rgba(212,160,23,0.15);
+  color: var(--text-gold);
+  white-space: nowrap;
+}
+.comp-date {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  color: var(--text-tertiary);
+  flex: 1;
+}
+.comp-price {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+/* P&L row preview */
+.pl-row-preview {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+}
+.pl-cell-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+.pl-cell-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--text-primary);
+}
+.pl-cell-val.positive { color: var(--green-400); }
+
+/* ── Screens section ── */
+.screens-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+.screen-block { }
+.screen-meta {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-top: 16px;
+  gap: 24px;
+}
+.screen-name {
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.screen-desc { font-size: 0.8125rem; max-width: 36ch; line-height: 1.5; }
+.screen-annotation-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-gold);
+  background: rgba(212,160,23,0.06);
+  border: 1px solid rgba(212,160,23,0.15);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+.screen-block-full {
+  margin-top: 24px;
+}
+.screen-placeholder-lg {
+  width: 100%;
+  aspect-ratio: 16/10;
+  border-radius: 12px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.7);
+}
+
+/* ── Reflection section ── */
+.reflection-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+}
+.reflection-block {}
+.reflection-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-gold);
+  margin-bottom: 20px;
+}
+.constraint-item, .next-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.constraint-item:last-child, .next-item:last-child { border-bottom: none; }
+.constraint-num, .next-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  color: var(--text-tertiary);
+  min-width: 20px;
+  padding-top: 2px;
+}
+.constraint-body, .next-body {}
+.constraint-title, .next-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.constraint-body p, .next-body p {
+  font-size: 0.8125rem;
+  max-width: none;
+  line-height: 1.5;
+}
+
+/* ── Footer ── */
+footer {
+  padding: 64px 0;
+  text-align: center;
+  border-top: 1px solid var(--border-subtle);
+}
+.footer-wordmark {
+  font-family: 'Fraunces', serif;
+  font-size: 2rem;
+  font-weight: 200;
+  letter-spacing: 0.2em;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.footer-wordmark em { font-style: italic; color: var(--text-gold); }
+.footer-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ── Animations ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-inner > * {
+  animation: fadeUp 0.7s var(--ease-out, cubic-bezier(0,0,0.2,1)) both;
+}
+.hero-inner > *:nth-child(1) { animation-delay: 0.05s; }
+.hero-inner > *:nth-child(2) { animation-delay: 0.15s; }
+.hero-inner > *:nth-child(3) { animation-delay: 0.25s; }
+.hero-inner > *:nth-child(4) { animation-delay: 0.35s; }
+
+/* ── Utilities ── */
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mt-48 { margin-top: 48px; }
+.mb-24 { margin-bottom: 24px; }
+.mb-48 { margin-bottom: 48px; }
+
+/* ── Responsive ── */
+@media (max-width: 1400px) {
+  body { padding-left: 240px; }
+}
+@media (max-width: 1024px) {
+  body { padding-left: 0; }
+  .problem-grid,
+  .ds-body-cols,
+  .token-grid,
+  .reflection-cols,
+  .screens-grid { grid-template-columns: 1fr; gap: 32px; }
+  .atomic-ladder { flex-direction: column; }
+  .ladder-step { border-right: none; border-bottom: 1px solid var(--border-subtle); }
+  .component-grid { grid-template-columns: 1fr 1fr; }
+  .page { padding: 0 30px; }
+}
+@media (max-width: 768px) {
+  .page { padding: 0 20px; }
+  section { padding: 72px 0; }
+  .component-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+    <!-- Column 1: Left Sidebar - Fixed -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <h1 class="sidebar-intro">
+                Hi, I'm Elias Mekuria -<br>
+                a designer and builder based in New York City.
+            </h1>
+            <p class="sidebar-bio">
+                I'm exploring the intersection of AI and design to create smarter, faster workflows - using intelligent tools to push the boundaries of what's possible in visual communication and digital experiences.
+            </p>
+            <nav class="sidebar-links">
+                <a href="https://www.linkedin.com/in/elias-mekuria/" class="sidebar-link">LinkedIn</a>
+                <a href="mailto:elijahmekuria@gmail.com" class="sidebar-link">Email</a>
+            </nav>
+
+            <!-- Back link -->
+            <a href="work.html" class="back-link">← Back to Work</a>
+        </div>
+    </aside>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="page">
+    <div class="hero-inner">
+      <div class="hero-eyebrow">Portfolio Case Study · 2026</div>
+      <div class="hero-headline">
+        <h1><em>Dial</em></h1>
+        <h1><span>Rolex Resale Tracker</span></h1>
+      </div>
+      <p class="hero-body">
+        Independent watch dealers track inventory in spreadsheets. Dial is a purpose-built tool
+        for managing Rolex holdings - P&L, comparable sales, and market value in one place.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">
+          <div class="hero-meta-label">Role</div>
+          <div class="hero-meta-value">Product Designer · Design Engineer</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-label">Deliverables</div>
+          <div class="hero-meta-value">Figma System · React App · Case Study</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-label">Stack</div>
+          <div class="hero-meta-value">Figma · React · Local State</div>
+        </div>
+        <div class="hero-meta-item">
+          <div class="hero-meta-label">Timeline</div>
+          <div class="hero-meta-value">2 Weekends</div>
+        </div>
+      </div>
+
+      <div class="hero-image-zone">
+        <div class="screen-placeholder">
+          <img src="Img/Dial-Inventory.png" alt="Dial - Dashboard Inventory List" />
+          <div class="screen-label">Screen 01 · Dashboard</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="page">
+    <div class="section-label">
+      <span class="section-num">01</span>
+      <span class="section-line"></span>
+      <span class="section-title-sm">Problem &amp; User</span>
+    </div>
+    <div class="problem-grid">
+      <div>
+        <h2 class="mb-24">The gap <em>spreadsheets</em> can't close</h2>
+        <p class="problem-body">
+          Small independent watch dealers and serious collectors - managing 5 to 20 watches at a time
+          - rely on spreadsheets and memory to track what they own, what they paid, and what the market is doing.
+          The result is fragmented data, slow decision-making, and missed timing on sales.
+        </p>
+        <div class="user-block mt-32">
+          <div class="user-block-label">Primary User</div>
+          <p>An independent Rolex dealer or serious collector managing 5–20 watches. Technically
+          comfortable but not a developer. Checks Chrono24 daily. Tracks comps manually in
+          a Notes app or spreadsheet. Makes buy/sell decisions based on gut feel rather than
+          organized data.</p>
+        </div>
+      </div>
+      <div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Inventory with status tags</div>
+              <p class="feature-desc">Every watch marked Holding, Listed, or Sold - at a glance, across the full portfolio.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Per-watch P&amp;L</div>
+              <p class="feature-desc">Purchase price vs. current market value vs. final sale price - tracked per watch, not per spreadsheet tab.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Comparable sales log</div>
+              <p class="feature-desc">Attach 2–3 comps to each watch with source, date, condition, and price. Pulled from Chrono24.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Market value tracking</div>
+              <p class="feature-desc">Manual market value entries over time, visualized as a sparkline on each watch card.</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-dot"></div>
+            <div>
+              <div class="feature-name">Portfolio summary bar</div>
+              <p class="feature-desc">Total invested, total market value, realized and unrealized gain - always visible at the top.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DESIGN SYSTEM -->
+<section id="system">
+  <div class="page">
+    <div class="section-label">
+      <span class="section-num">02</span>
+      <span class="section-line"></span>
+      <span class="section-title-sm">Design System</span>
+    </div>
+    <h2 class="mb-24">Built <em>bottom-up,</em><br>not screen-first</h2>
+    <p class="mb-48" style="max-width:58ch;">
+      Before designing a single screen, I built the full design system using Atomic Design - 
+      establishing visual language at the token level, composing it into atoms, 
+      then molecules and organisms, before any layout decisions were made.
+    </p>
+
+    <!-- Atomic ladder -->
+    <div class="atomic-ladder">
+      <div class="ladder-step">
+        <div class="ladder-tier">Tier 1</div>
+        <div class="ladder-name">Tokens</div>
+        <div class="ladder-desc">Color, type, spacing, shadow values. The raw vocabulary of the system.</div>
+        <div class="ladder-example">Gold/500 · Text/Primary · Space/4</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ladder-tier">Tier 2</div>
+        <div class="ladder-name">Atoms</div>
+        <div class="ladder-desc">Smallest reusable elements. Badge, Button, Input, Icon, Divider.</div>
+        <div class="ladder-example">Badge/Holding · Button/Primary</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ladder-tier">Tier 3</div>
+        <div class="ladder-name">Molecules</div>
+        <div class="ladder-desc">Atoms combined for a specific job. Watch Card, Stat Card, Comp Row.</div>
+        <div class="ladder-example">WatchCard/Compact · CompRow</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ladder-tier">Tier 4</div>
+        <div class="ladder-name">Organisms</div>
+        <div class="ladder-desc">Full UI sections. Inventory List, Portfolio Bar, Detail Panel.</div>
+        <div class="ladder-example">InventoryList · PortfolioBar</div>
+      </div>
+      <div class="ladder-step">
+        <div class="ladder-tier">Tier 5</div>
+        <div class="ladder-name">Templates</div>
+        <div class="ladder-desc">Layout skeletons. Zones defined, no real content yet.</div>
+        <div class="ladder-example">Dashboard · DetailView</div>
+      </div>
+      <div class="ladder-step" style="border-right:none;">
+        <div class="ladder-tier">Tier 6</div>
+        <div class="ladder-name">Screens</div>
+        <div class="ladder-desc">Templates with real data. Watch photos, actual prices, real comps.</div>
+        <div class="ladder-example">Submariner 126610 · $14,200</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+      <div class="ds-principle">
+        <div class="ds-principle-title">Why systems-first?</div>
+        <p>Building screen-first creates local decisions that compound into inconsistency.
+        A design system forces every visual decision to be made once, at the source - 
+        then referenced everywhere. Change a token, update the entire system. No hunting, no drift.</p>
+      </div>
+      <div class="ds-principle">
+        <div class="ds-principle-title">Single source of truth</div>
+        <p>Every color, spacing value, and typography decision lives in a token. No raw hex
+        values in component fills. No hardcoded sizes on frames. If something needs to change,
+        it changes in one place and propagates automatically.</p>
+      </div>
+      <div class="ds-principle">
+        <div class="ds-principle-title">Free plan constraint → architecture decision</div>
+        <p>Figma's free plan allows only one variable collection. Solved with slash-group naming:
+        <code style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-gold);">Primitives/Gold/500</code> and
+        <code style="font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--text-gold);">Semantic/Text/Primary</code>
+        live in the same collection, organized by prefix. A constraint that forced a cleaner naming system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TOKENS -->
+<section id="tokens">
+  <div class="page">
+    <div class="section-label">
+      <span class="section-num">03</span>
+      <span class="section-line"></span>
+      <span class="section-title-sm">Token Decisions</span>
+    </div>
+    <h2 class="mb-24">Visual language <em>from the ground up</em></h2>
+    <p class="mb-48">Three decisions that define how Dial feels - and the reasoning behind each one.</p>
+
+    <div class="token-grid">
+      <!-- Color -->
+      <div class="token-block">
+        <div class="token-block-label">Color - Primitive Ramps</div>
+        <div class="color-ramp">
+          <div class="swatch" style="background:#3d2a03;"><span class="swatch-label light">900</span></div>
+          <div class="swatch" style="background:#92690a;"><span class="swatch-label light">700</span></div>
+          <div class="swatch" style="background:#b7860e;"><span class="swatch-label light">600</span></div>
+          <div class="swatch" style="background:#d4a017;"><span class="swatch-label light">500</span></div>
+          <div class="swatch" style="background:#f5c842;"><span class="swatch-label">400</span></div>
+          <div class="swatch" style="background:#fde68a;"><span class="swatch-label">300</span></div>
+        </div>
+        <div class="token-block-label mt-16">Semantic Mapping - Chain</div>
+        <div class="chain-diagram">
+          <div class="chain-token">Primitives/Gold/500</div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-token semantic">Semantic/Brand/Primary</div>
+          <div class="chain-swatch" style="background:#d4a017; border-radius:4px;"></div>
+        </div>
+        <div class="chain-diagram">
+          <div class="chain-token">Primitives/Zinc/400</div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-token semantic">Semantic/Text/Secondary</div>
+          <div class="chain-swatch" style="background:#a1a1aa; border-radius:4px;"></div>
+        </div>
+        <div class="chain-diagram">
+          <div class="chain-token">Primitives/Zinc/900</div>
+          <div class="chain-arrow">→</div>
+          <div class="chain-token semantic">Semantic/Surface/Base</div>
+          <div class="chain-swatch" style="background:#18181b; border-radius:4px;"></div>
+        </div>
+      </div>
+
+      <!-- Type scale -->
+      <div class="token-block">
+        <div class="token-block-label">Type Scale</div>
+        <div class="type-scale">
+          <div class="type-row">
+            <div class="type-meta">Display · 30px</div>
+            <div class="type-sample" style="font-family:'Fraunces',serif;font-size:1.25rem;font-weight:300;">Submariner</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">Body/lg · 18px</div>
+            <div class="type-sample" style="font-size:1rem;">Watch inventory</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">Body/md · 14px</div>
+            <div class="type-sample" style="font-size:0.875rem;">Purchased Nov 2023</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">Mono/data · 13px</div>
+            <div class="type-sample" style="font-family:'DM Mono',monospace;font-size:0.8125rem;">$14,200.00</div>
+          </div>
+          <div class="type-row">
+            <div class="type-meta">Label/sm · 11px</div>
+            <div class="type-sample" style="font-family:'DM Mono',monospace;font-size:0.6875rem;letter-spacing:0.1em;text-transform:uppercase;">MARKET VALUE</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decisions -->
+    <div class="mt-48">
+      <div class="token-block-label mb-24" style="font-family:'DM Mono',monospace;font-size:.625rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-tertiary);">Key Decisions</div>
+      <div class="token-decision">
+        <div style="padding-top:2px;color:var(--text-gold);font-family:'DM Mono',monospace;font-size:.75rem;flex-shrink:0;">01</div>
+        <div>
+          <div class="token-decision-q">Why dark-first?</div>
+          <p>Data-dense UIs are more legible on dark backgrounds - high contrast for numbers,
+          reduced eye strain during extended sessions. Dark also reads as premium, which aligns
+          with the Rolex category and the serious-collector user.</p>
+        </div>
+      </div>
+      <div class="token-decision mt-16">
+        <div style="padding-top:2px;color:var(--text-gold);font-family:'DM Mono',monospace;font-size:.75rem;flex-shrink:0;">02</div>
+        <div>
+          <div class="token-decision-q">Why gold as the brand accent?</div>
+          <p>Gold is the most legible warm accent on a dark background and has direct category resonance
+          with Rolex. It's used sparingly - semantic token names (Brand/Primary) rather than color-literal
+          names - so a future rebrand swaps one value, not dozens of component fills.</p>
+        </div>
+      </div>
+      <div class="token-decision mt-16">
+        <div style="padding-top:2px;color:var(--text-gold);font-family:'DM Mono',monospace;font-size:.75rem;flex-shrink:0;">03</div>
+        <div>
+          <div class="token-decision-q">Why DM Mono for data values?</div>
+          <p>Monospace fonts are tabular by nature - digits align vertically in lists, making
+          comparison scanning fast. Geist handles all UI copy. Fraunces handles display headings.
+          Three fonts, three distinct roles, no overlap.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTS -->
+<section id="components">
+  <div class="page">
+    <div class="section-label">
+      <span class="section-num">04</span>
+      <span class="section-line"></span>
+      <span class="section-title-sm">Component Showcase</span>
+    </div>
+    <h2 class="mb-24">10 atoms · 6 molecules · <em>every decision intentional</em></h2>
+    <p class="mb-48">Every component in the system exported directly from Figma - the same token values, the same constraints, the real thing.</p>
+
+    <!-- ─── ATOMS ROW LABEL ─── -->
+    <div style="font-family:'DM Mono',monospace;font-size:0.5625rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-gold);margin-bottom:2px;">Atoms - 10 components</div>
+
+    <!-- Component grid -->
+    <div class="component-grid">
+
+      <!-- Badge -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Badge</div>
+        <div class="badge-row">
+          <span class="badge holding">Holding</span>
+          <span class="badge listed">Listed</span>
+          <span class="badge sold">Sold</span>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Slash-named standalone components (Badge/Holding etc.) rather than variant sets.</p>
+      </div>
+
+      <!-- Button -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Button</div>
+        <div style="display:flex;flex-direction:column;align-items:flex-start;gap:8px;">
+          <button class="btn-preview primary">Add Watch</button>
+          <button class="btn-preview ghost">Filter</button>
+          <button class="btn-preview destructive">Mark Sold</button>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Three variants covering the full action hierarchy. Primary uses Brand/Primary token - swap one value to rebrand.</p>
+      </div>
+
+      <!-- Input -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Input</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="border:1px solid rgba(255,255,255,0.09);border-radius:8px;padding:10px 12px;background:var(--bg-elevated);display:flex;align-items:center;gap:8px;">
+            <span style="font-size:0.875rem;color:var(--text-primary);">126610LN</span>
+          </div>
+          <div style="border:1px solid var(--gold-500);border-radius:8px;padding:10px 12px;background:var(--bg-elevated);display:flex;align-items:center;gap:8px;box-shadow:0 0 0 3px rgba(212,160,23,0.12);">
+            <span style="font-size:0.875rem;color:var(--text-primary);">Submariner Date</span>
+          </div>
+          <div style="border:1px solid rgba(239,68,68,0.4);border-radius:8px;padding:10px 12px;background:var(--bg-elevated);">
+            <span style="font-size:0.875rem;color:var(--text-tertiary);">Required field</span>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Default · Focus · Error states. Focus ring uses Brand/Primary at 12% opacity.</p>
+      </div>
+
+      <!-- Tag / Filter Pill -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Tag / Filter Pill</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <div style="padding:5px 12px;border-radius:9999px;border:1px solid var(--gold-500);background:rgba(212,160,23,0.08);font-family:'DM Mono',monospace;font-size:0.625rem;letter-spacing:0.08em;color:var(--text-gold);">All</div>
+          <div style="padding:5px 12px;border-radius:9999px;border:1px solid rgba(255,255,255,0.09);background:transparent;font-family:'DM Mono',monospace;font-size:0.625rem;letter-spacing:0.08em;color:var(--text-tertiary);">Holding</div>
+          <div style="padding:5px 12px;border-radius:9999px;border:1px solid rgba(255,255,255,0.09);background:transparent;font-family:'DM Mono',monospace;font-size:0.625rem;letter-spacing:0.08em;color:var(--text-tertiary);">Listed</div>
+          <div style="padding:5px 12px;border-radius:9999px;border:1px solid rgba(255,255,255,0.09);background:transparent;font-family:'DM Mono',monospace;font-size:0.625rem;letter-spacing:0.08em;color:var(--text-tertiary);">Sold</div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Inventory filter pills. Active state uses Brand/Primary border + tinted fill. Separate from Badge atom - different job, different component.</p>
+      </div>
+
+      <!-- Divider -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Divider</div>
+        <div style="display:flex;flex-direction:column;gap:16px;padding:8px 0;">
+          <div style="height:1px;background:rgba(255,255,255,0.05);width:100%;"></div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="flex:1;height:1px;background:rgba(255,255,255,0.05);"></div>
+            <span style="font-family:'DM Mono',monospace;font-size:0.5625rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);">Comps</span>
+            <div style="flex:1;height:1px;background:rgba(255,255,255,0.05);"></div>
+          </div>
+          <div style="height:1px;background:rgba(212,160,23,0.2);width:100%;"></div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Three variants: subtle, labeled, and gold-accent for section breaks in the Detail Panel.</p>
+      </div>
+
+      <!-- Skeleton -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Skeleton</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="height:12px;border-radius:4px;background:linear-gradient(90deg,var(--bg-elevated) 25%,var(--bg-overlay) 50%,var(--bg-elevated) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;width:60%;"></div>
+          <div style="height:10px;border-radius:4px;background:linear-gradient(90deg,var(--bg-elevated) 25%,var(--bg-overlay) 50%,var(--bg-elevated) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite 0.1s;width:80%;"></div>
+          <div style="height:10px;border-radius:4px;background:linear-gradient(90deg,var(--bg-elevated) 25%,var(--bg-overlay) 50%,var(--bg-elevated) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite 0.2s;width:45%;"></div>
+          <div style="margin-top:4px;height:44px;border-radius:8px;background:linear-gradient(90deg,var(--bg-elevated) 25%,var(--bg-overlay) 50%,var(--bg-elevated) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite 0.05s;"></div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Loading state placeholder. Corner radius matches the element it replaces - applied to inner rectangle, not the outer component frame.</p>
+      </div>
+
+      <!-- Thumbnail -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Thumbnail</div>
+        <div style="display:flex;gap:10px;align-items:flex-end;">
+          <div style="width:32px;height:32px;border-radius:6px;background:var(--bg-overlay);border:1px solid rgba(255,255,255,0.09);display:flex;align-items:center;justify-content:center;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div style="width:48px;height:48px;border-radius:8px;background:var(--bg-overlay);border:1px solid rgba(255,255,255,0.09);display:flex;align-items:center;justify-content:center;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+          <div style="width:72px;height:72px;border-radius:10px;background:var(--bg-overlay);border:1px solid rgba(255,255,255,0.09);display:flex;align-items:center;justify-content:center;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Three sizes: sm/32px for compact cards, md/48px for expanded cards, lg/72px for the detail panel hero.</p>
+      </div>
+
+      <!-- Icon -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Icon</div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <!-- LayoutGrid (Inventory) -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <!-- TrendingUp (Portfolio) -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="1.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+          <!-- Activity (Market) -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          <!-- User (Settings) -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <!-- Plus -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a1a1aa" stroke-width="1.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <!-- ChevronUp (positive delta) -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="1.5"><polyline points="18 15 12 9 6 15"/></svg>
+          <!-- ChevronDown (negative delta) -->
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="1.5"><polyline points="18 9 12 15 6 9"/></svg>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Lucide icons at 16px. Colored via semantic tokens - Text/Secondary for neutral, Brand/Primary for positive delta, Status/Error for negative. Dropped directly at organism level rather than wrapped as instances.</p>
+      </div>
+
+      <!-- Delta Indicator -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Delta Indicator</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:6px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+            <span style="font-family:'DM Mono',monospace;font-size:0.8125rem;color:#4ade80;">+$1,200</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.6875rem;color:#71717a;">+9.2%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2"><polyline points="18 9 12 15 6 9"/></svg>
+            <span style="font-family:'DM Mono',monospace;font-size:0.8125rem;color:#f87171;">−$800</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.6875rem;color:#71717a;">−5.8%</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-family:'DM Mono',monospace;font-size:0.8125rem;color:#71717a;">$0</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.6875rem;color:#71717a;">0.0%</span>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Shows absolute and percentage change. "Delta" - the mathematical term for difference - is used throughout Dial's naming for this component.</p>
+      </div>
+
+      <!-- Nav Item -->
+      <div class="component-cell">
+        <div class="component-cell-label">Atom · Nav Item</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;background:rgba(212,160,23,0.08);border:1px solid rgba(212,160,23,0.12);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d4a017" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            <span style="font-size:0.8125rem;font-weight:500;color:var(--text-gold);">Inventory</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="1.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            <span style="font-size:0.8125rem;color:var(--text-tertiary);">Portfolio</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span style="font-size:0.8125rem;color:var(--text-tertiary);">Market</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#71717a" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span style="font-size:0.8125rem;color:var(--text-tertiary);">Settings</span>
+          </div>
+        </div>
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Active state: gold tint + Brand/Primary icon color. Default state: tertiary text, no background.</p>
+      </div>
+
+    </div>
+
+    <!-- ─── MOLECULES ROW LABEL ─── -->
+    <div style="font-family:'DM Mono',monospace;font-size:0.5625rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-gold);margin-top:48px;margin-bottom:2px;">Molecules - 6 components</div>
+
+    <div class="component-grid">
+
+      <!-- Watch Card Compact -->
+      <div class="component-cell" style="grid-column:span 2;">
+        <div class="component-cell-label">Molecule · Watch Card / Compact</div>
+        <img src="Img/Dial-Compact.png" alt="Watch Card / Compact" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">The primary list item. Thumbnail atom + ref/name/price text + Badge atom + Delta Indicator atom, composed in Auto Layout. Compact keeps the list scannable - expanded shows more detail on hover or selection.</p>
+      </div>
+
+      <!-- Watch Card Expanded -->
+      <div class="component-cell" style="grid-column:span 2;">
+        <div class="component-cell-label">Molecule · Watch Card / Expanded</div>
+        
+          <img src="Img/Dial-Expanded.png" alt="Watch Card / Expanded" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Same atoms as Compact, restructured for a wider layout. Used in the detail panel context where more horizontal space is available.</p>
+      </div>
+
+      <!-- Stat Card -->
+      <div class="component-cell">
+        <div class="component-cell-label">Molecule · Stat Card</div>
+        <img src="Img/Dial-Positive.png" alt="Stat Card/ Positive" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Used in the Portfolio Summary Bar. Label in Label/sm, value in Mono/data at 20px.</p>
+      </div>
+
+      <!-- Sparkline Cell -->
+      <div class="component-cell">
+        <div class="component-cell-label">Molecule · Sparkline Cell</div>
+        <img src="Img/Dial-Up.png" alt="Stat Card/ Positive" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Market value trend over time. labels in DM Mono at 6px - small enough to annotate without competing with the line.</p>
+      </div>
+
+      <!-- Comp Entry Row -->
+      <div class="component-cell">
+        <div class="component-cell-label">Molecule · Comp Entry Row</div>
+        <img src="Img/Dial-Comp Header.png" alt="Stat Card/ Positive" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        <img src="Img/Dial-Data.png" alt="Stat Card/ Positive" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Source chip uses a fixed-width wrapper to maintain column alignment regardless of chip label length - a non-obvious Figma constraint solved with a wrapper frame.</p>
+      </div>
+
+      <!-- P&L Row -->
+      <div class="component-cell">
+        <div class="component-cell-label">Molecule · P&amp;L Row</div>
+        <img src="Img/Dial-Header.png" alt="Stat Card/ Positive" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        <img src="Img/Dial-PL Data.png" alt="Stat Card/ Positive" style="width:100%;height:auto;display:block;border-radius:8px;" />
+        <p style="font-size:.75rem;color:var(--text-tertiary);max-width:none;line-height:1.5;">Three-column layout using DM Mono throughout. Delta cell pulls color from the Delta Indicator atom - green for gain, red for loss, tertiary for flat.</p>
+      </div>
+
+    </div>
+
+    <!-- Request access -->
+    <div style="margin-top:32px;display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border:1px solid var(--border-default);border-radius:12px;background:var(--bg-surface);">
+      <div>
+        <div style="font-weight:500;font-size:0.875rem;color:var(--text-primary);margin-bottom:4px;">Want to see the full Figma file?</div>
+        <div style="font-size:0.8125rem;color:var(--text-tertiary);">All 10 atoms · 6 molecules · token variables · build annotations</div>
+      </div>
+      <a href="mailto:elijahmekuria@gmail.com?subject=Dial Figma File - Access Request" style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:8px;background:var(--gold-500);border:1px solid transparent;font-family:'DM Mono',monospace;font-size:0.6875rem;letter-spacing:0.08em;text-transform:uppercase;color:#09090b;text-decoration:none;white-space:nowrap;font-weight:600;transition:background 200ms ease;" onmouseover="this.style.background='#b7860e'" onmouseout="this.style.background='#d4a017'">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Request Access
+      </a>
+    </div>
+
+  </div>
+</section>
+
+<style>
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+</style>
+
+<!-- SCREENS -->
+<section id="screens">
+  <div class="page">
+    <div class="section-label">
+      <span class="section-num">05</span>
+      <span class="section-line"></span>
+      <span class="section-title-sm">Screen Walkthroughs</span>
+    </div>
+    <h2 class="mb-24">Five screens, <em>one coherent product</em></h2>
+    <p class="mb-48">Each screen is a template filled with real watch data - reference numbers, actual prices, real comps pulled from Chrono24.</p>
+
+    <!-- Screen 01 + 02 -->
+    <div class="screens-grid">
+      <div class="screen-block">
+        <div class="screen-placeholder" style="border-radius:12px;">
+          <img src="Img/Dial-Inventory.png" alt="Dial - Dashboard Inventory List" />
+        </div>
+        <div class="screen-meta">
+          <div>
+            <div class="screen-name">Dashboard - Inventory List</div>
+            <p class="screen-desc">The primary view. Portfolio bar across the top, filter pills for status, watch cards in a scrollable list. The sidebar holds navigation and quick stats.</p>
+          </div>
+          <div class="screen-annotation-tag">Primary View</div>
+        </div>
+      </div>
+
+      <div class="screen-block">
+        <div class="screen-placeholder" style="border-radius:12px;">
+          <img src="Img/Dial-Detail.png" alt="Dial - Watch Detail Panel" />
+        </div>
+        <div class="screen-meta">
+          <div>
+            <div class="screen-name">Watch Detail Panel</div>
+            <p class="screen-desc">Click a watch in the list to open the detail panel. P&L breakdown, sparkline chart, comps log, and photos - all without leaving the inventory view.</p>
+          </div>
+          <div class="screen-annotation-tag">Core Flow</div>
+        </div>
+      </div>
+
+      <div class="screen-block">
+        <div class="screen-placeholder" style="border-radius:12px;">
+          <img src="Img/Dial-Drawer.png" alt="Dial - Add Watch Drawer" />
+        </div>
+        <div class="screen-meta">
+          <div>
+            <div class="screen-name">Add Watch Drawer</div>
+            <p class="screen-desc">Slides in as an overlay on the right. Reference, model, colorway, condition, purchase price, date. The background remains visible - context is preserved.</p>
+          </div>
+          <div class="screen-annotation-tag">Entry Flow</div>
+        </div>
+      </div>
+
+      <div class="screen-block">
+        <div class="screen-placeholder" style="border-radius:12px;">
+          <img src="Img/Dial-Modal.png" alt="Dial - Mark as Sold Modal" />
+        </div>
+        <div class="screen-meta">
+          <div>
+            <div class="screen-name">Mark as Sold Flow</div>
+            <p class="screen-desc">Confirm the final sale price to close out the P&L. Status updates to Sold, realized gain is calculated and surfaced in the portfolio summary bar.</p>
+          </div>
+          <div class="screen-annotation-tag">Exit Flow</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Screen 05 – Full width -->
+    <div class="screen-block-full">
+      <div class="screen-placeholder" style="border-radius:12px;">
+        <img src="Img/Dial-Empty.png" alt="Dial - Empty State" />
+      </div>
+      <div class="screen-meta" style="margin-top:16px;">
+        <div>
+          <div class="screen-name">Empty State</div>
+          <p class="screen-desc">The first-run experience. Clear value proposition, single call-to-action. Empty states are often an afterthought - designed here as a deliberate onboarding moment.</p>
+        </div>
+        <div class="screen-annotation-tag">Onboarding</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- REFLECTION -->
+<section id="reflection">
+  <div class="page">
+    <div class="section-label">
+      <span class="section-num">06</span>
+      <span class="section-line"></span>
+      <span class="section-title-sm">Reflection</span>
+    </div>
+    <h2 class="mb-48">Constraints &amp; <em>what comes next</em></h2>
+
+    <div class="reflection-cols">
+      <div class="reflection-block">
+        <div class="reflection-label">Constraints that shaped the system</div>
+        <div class="constraint-item">
+          <div class="constraint-num">01</div>
+          <div class="constraint-body">
+            <div class="constraint-title">One variable collection (Figma free plan)</div>
+            <p>Solved with slash-group naming - Primitives/Gold/500 and Semantic/Text/Primary in the same collection, organized by prefix. Forced a cleaner naming convention than a multi-collection setup would have produced.</p>
+          </div>
+        </div>
+        <div class="constraint-item">
+          <div class="constraint-num">02</div>
+          <div class="constraint-body">
+            <div class="constraint-title">No variant sets → slash-named components</div>
+            <p>Badge/Holding, Badge/Listed, Badge/Sold as standalone components instead of a true variant set. Slightly more components to manage, but each is independently documented and swappable.</p>
+          </div>
+        </div>
+        <div class="constraint-item">
+          <div class="constraint-num">03</div>
+          <div class="constraint-body">
+            <div class="constraint-title">Icon instances impractical inside components</div>
+            <p>Lucide icons dropped directly at organism level rather than wrapped in an Icon atom instance. The Icon atom exists as documentation and engineering reference - not as a Figma instance dependency chain.</p>
+          </div>
+        </div>
+        <div class="constraint-item">
+          <div class="constraint-num">04</div>
+          <div class="constraint-body">
+            <div class="constraint-title">Local state only (no backend)</div>
+            <p>The React app uses local state for portfolio scope. Real data persistence (cloud sync, multi-device) is a next-step feature, not a launch blocker for a portfolio demonstration.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="reflection-block">
+        <div class="reflection-label">What I'd build next</div>
+        <div class="next-item">
+          <div class="next-num">→</div>
+          <div class="next-body">
+            <div class="next-title">WatchCharts API integration</div>
+            <p>Pull live market values automatically rather than relying on manual comp entry. Removes the biggest friction point in the current workflow.</p>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="next-num">→</div>
+          <div class="next-body">
+            <div class="next-title">Cloud sync + multi-device</div>
+            <p>Supabase or Firebase backend to persist inventory across devices. The data model is already designed for this - Watch, MarketEntry, Comp, Portfolio as separate tables.</p>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="next-num">→</div>
+          <div class="next-body">
+            <div class="next-title">Broader reference coverage</div>
+            <p>Expand beyond Rolex to Patek Philippe, AP, and other blue-chip brands. The category taxonomy and data model generalize with minimal changes.</p>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="next-num">→</div>
+          <div class="next-body">
+            <div class="next-title">Export / reporting</div>
+            <p>PDF P&L summary per watch or per period. Useful for tax documentation and for dealers presenting portfolio performance to partners or investors.</p>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="next-num">→</div>
+          <div class="next-body">
+            <div class="next-title">Light mode + brand themes</div>
+            <p>The semantic token system is already designed for this - adding a light mode is a variable mode switch, not a redesign. The primitive→semantic chain makes it trivial.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="page">
+    <div class="footer-wordmark"><em>D</em>ial</div>
+    <div class="footer-sub">A Rolex Resale Tracker · Product Design Case Study · 2026</div>
+  </div>
+</footer>
+
+</body>
+</html>

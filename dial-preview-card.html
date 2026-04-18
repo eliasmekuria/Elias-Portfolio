@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dial — Preview Card</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,200;0,9..144,300;1,9..144,200;1,9..144,300&family=Geist:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1600px; height: 900px; overflow: hidden; }
+
+body {
+  background: #0a0a0b;
+  font-family: 'Geist', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Grain */
+body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* Radial glow — top left behind wordmark */
+.glow-left {
+  position: absolute;
+  top: -180px;
+  left: -100px;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(212,160,23,0.09) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* Radial glow — bottom right behind card */
+.glow-right {
+  position: absolute;
+  bottom: -200px;
+  right: -80px;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(212,160,23,0.06) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* Layout */
+.canvas {
+  width: 1600px;
+  height: 900px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  padding: 80px 100px;
+  position: relative;
+  gap: 80px;
+}
+
+/* LEFT — wordmark + descriptor */
+.left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4a017;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.eyebrow::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: #d4a017;
+  display: block;
+}
+
+.wordmark {
+  font-family: 'Fraunces', serif;
+  font-size: 140px;
+  font-weight: 200;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  color: #f4f4f5;
+  margin-bottom: 0;
+}
+.wordmark em {
+  font-style: italic;
+  color: #d4a017;
+}
+
+.descriptor {
+  font-size: 16px;
+  color: #71717a;
+  line-height: 1.6;
+  max-width: 36ch;
+  margin-bottom: 48px;
+}
+
+.meta-row {
+  display: flex;
+  gap: 32px;
+}
+.meta-item {}
+.meta-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3f3f46;
+  margin-bottom: 5px;
+}
+.meta-value {
+  font-size: 13px;
+  color: #a1a1aa;
+  font-weight: 500;
+}
+
+/* Divider */
+.v-rule {
+  width: 1px;
+  height: 360px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.06) 80%, transparent);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* RIGHT — watch card stack */
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+/* Watch card */
+.watch-card {
+  background: #111113;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+  transition: border-color 200ms;
+}
+.watch-card.active {
+  border-color: rgba(212,160,23,0.25);
+  background: #131312;
+  box-shadow: 0 0 0 1px rgba(212,160,23,0.08), 0 8px 32px rgba(0,0,0,0.6);
+}
+
+/* Thumbnail */
+.thumb {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  background: #1a1a1c;
+  border: 1px solid rgba(255,255,255,0.07);
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+/* REPLACE: swap background-image for real photo */
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card body */
+.card-body {
+  flex: 1;
+  min-width: 0;
+}
+.card-ref {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: #52525b;
+  margin-bottom: 3px;
+}
+.card-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #f4f4f5;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-price {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: #71717a;
+}
+
+/* Badge */
+.badge {
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.07em;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.badge.holding { background: #1c1000; color: #fbbf24; border: 1px solid rgba(251,191,36,0.18); }
+.badge.listed  { background: #0f1f3d; color: #93c5fd; border: 1px solid rgba(147,197,253,0.18); }
+.badge.sold    { background: #052e16; color: #4ade80; border: 1px solid rgba(74,222,128,0.18); }
+
+/* Delta */
+.delta {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+.delta.up { color: #4ade80; }
+.delta.down { color: #f87171; }
+
+/* Sparkline strip on active card */
+.sparkline-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
+  opacity: 0.6;
+}
+
+/* Portfolio bar — bottom of right column */
+.portfolio-bar {
+  margin-top: 4px;
+  background: #111113;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 16px 24px;
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+.bar-stat {}
+.bar-stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #3f3f46;
+  margin-bottom: 4px;
+}
+.bar-stat-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: #f4f4f5;
+  letter-spacing: -0.02em;
+}
+.bar-stat-value.green { color: #4ade80; }
+.bar-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255,255,255,0.06);
+}
+</style>
+</head>
+<body>
+
+<div class="glow-left"></div>
+<div class="glow-right"></div>
+
+<div class="canvas">
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="eyebrow">Product Design · Design Engineering</div>
+    <div class="wordmark"><em>D</em>ial</div>
+  </div>
+
+  <!-- Vertical rule -->
+  <div class="v-rule"></div>
+
+  <!-- RIGHT -->
+  <div class="right">
+
+    <!-- Card 1 — active, featured -->
+    <div class="watch-card active">
+      <div class="thumb">
+        <!-- REPLACE: <img src="Img/your-watch-photo.jpg" alt="Submariner"> -->
+        <img src="Img/228238.avif" alt="Submariner">
+      </div>
+      <div class="card-body">
+        <div class="card-ref">126610LN</div>
+        <div class="card-name">Submariner Date</div>
+        <div class="card-price">$14,200</div>
+      </div>
+      <span class="badge holding">Holding</span>
+      <div class="delta up">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        +$1,200
+      </div>
+      <!-- Sparkline -->
+      <div class="sparkline-strip">
+        <svg width="100%" height="32" viewBox="0 0 600 32" preserveAspectRatio="none" fill="none">
+          <defs>
+            <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#d4a017" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#d4a017" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+          <path d="M0 26 L80 23 L160 20 L260 16 L340 18 L430 10 L520 7 L600 4" stroke="#d4a017" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M0 26 L80 23 L160 20 L260 16 L340 18 L430 10 L520 7 L600 4 L600 32 L0 32 Z" fill="url(#sg)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="watch-card">
+      <div class="thumb">
+        <div class="thumb-placeholder">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">116500LN</div>
+        <div class="card-name">Daytona Panda</div>
+        <div class="card-price">$28,500</div>
+      </div>
+      <span class="badge listed">Listed</span>
+      <div class="delta up">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+        +$3,200
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="watch-card">
+      <div class="thumb">
+        <div class="thumb-placeholder">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1.2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <polyline points="21 15 16 10 5 21"/>
+          </svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-ref">126334</div>
+        <div class="card-name">Datejust 41 Jubilee</div>
+        <div class="card-price">$9,800</div>
+      </div>
+      <span class="badge sold">Sold</span>
+      <div class="delta down">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 9 12 15 6 9"/></svg>
+        -$400
+      </div>
+    </div>
+
+    <!-- Portfolio bar -->
+    <div class="portfolio-bar">
+      <div class="bar-stat">
+        <div class="bar-stat-label">Total Invested</div>
+        <div class="bar-stat-value">$52,500</div>
+      </div>
+      <div class="bar-divider"></div>
+      <div class="bar-stat">
+        <div class="bar-stat-label">Market Value</div>
+        <div class="bar-stat-value">$56,700</div>
+      </div>
+      <div class="bar-divider"></div>
+      <div class="bar-stat">
+        <div class="bar-stat-label">Unrealized Gain</div>
+        <div class="bar-stat-value green">+$4,200</div>
+      </div>
+      <div class="bar-divider"></div>
+      <div class="bar-stat">
+        <div class="bar-stat-label">Realized Gain</div>
+        <div class="bar-stat-value green">+$2,800</div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</body>
+</html>
