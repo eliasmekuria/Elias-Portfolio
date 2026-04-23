@@ -183,6 +183,52 @@ section p {
   pointer-events: none;
 }
 
+/* ── Hero duo screens ── */
+.hero-screens-duo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-top: 0;
+}
+.hero-screen {}
+.hero-screen--secondary {}
+.hero-screen-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.hero-screen-num {
+  color: var(--text-gold);
+  background: rgba(212,160,23,0.08);
+  border: 1px solid rgba(212,160,23,0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+.hero-screen-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.625rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+.hero-screen-num {
+  color: var(--text-gold);
+  background: rgba(212,160,23,0.08);
+  border: 1px solid rgba(212,160,23,0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
 /* ── Hero image zone ── */
 .hero-image-zone {
   margin-top: 80px;
@@ -869,6 +915,8 @@ footer {
   .ladder-step { border-right: none; border-bottom: 1px solid var(--border-subtle); }
   .component-grid { grid-template-columns: 1fr 1fr; }
   .page { padding: 0 30px; }
+  .hero-screens-duo { grid-template-columns: 1fr; }
+  .hero-screen--secondary { transform: none; }
 }
 @media (max-width: 768px) {
   .page { padding: 0 20px; }
@@ -933,9 +981,25 @@ footer {
       </div>
 
       <div class="hero-image-zone">
-        <div class="screen-placeholder">
-          <img src="Img/Dial-Detail.png" alt="Dial - Dashboard Inventory List" />
-          <div class="screen-label">Screen 02 · Detail Panel</div>
+        <div class="hero-screens-duo">
+          <div class="hero-screen hero-screen--primary">
+            <div class="screen-placeholder" style="border-radius:12px;">
+              <img src="Img/Dial-Portfolio.png" alt="Dial - Portfolio Dashboard" />
+            </div>
+            <div class="hero-screen-label">
+              <span class="hero-screen-num">S6</span>
+              Portfolio Dashboard
+            </div>
+          </div>
+          <div class="hero-screen hero-screen--secondary">
+            <div class="screen-placeholder" style="border-radius:12px;">
+              <img src="Img/Dial-Detail.png" alt="Dial - Watch Detail Panel" />
+            </div>
+            <div class="hero-screen-label">
+              <span class="hero-screen-num">S2</span>
+              Watch Detail Panel
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1460,7 +1524,7 @@ footer {
       <span class="section-line"></span>
       <span class="section-title-sm">Screen Walkthroughs</span>
     </div>
-    <h2 class="mb-24">Five screens, <em>one coherent product</em></h2>
+    <h2 class="mb-24">Six screens, <em>one coherent product</em></h2>
     <p class="mb-48">Each screen is a template filled with real watch data - reference numbers, actual prices, real comps pulled from Chrono24.</p>
 
     <!-- Screen 01 + 02 -->
@@ -1532,6 +1596,24 @@ footer {
       </div>
     </div>
 
+    <!-- Screen 06 – Portfolio full width -->
+    <div class="screen-block-full" style="margin-top:48px;">
+      <div style="margin-bottom:16px;display:flex;align-items:center;gap:12px;">
+        <span style="font-family:'DM Mono',monospace;font-size:0.5625rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-gold);background:rgba(212,160,23,0.06);border:1px solid rgba(212,160,23,0.15);padding:4px 8px;border-radius:4px;">New</span>
+        <span style="font-family:'DM Mono',monospace;font-size:0.5625rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-tertiary);">Screen 06 · Portfolio</span>
+      </div>
+      <div class="screen-placeholder" style="border-radius:12px;">
+        <img src="Img/Dial-Portfolio.png" alt="Dial - Portfolio Dashboard" />
+      </div>
+      <div class="screen-meta" style="margin-top:16px;">
+        <div>
+          <div class="screen-name">Portfolio Dashboard</div>
+          <p class="screen-desc">The analytical view. Portfolio Bar anchors current state at the top - total invested, market value, unrealized and realized gain. The FilterBar below scopes everything beneath it by time range and status. Stat cards, a cumulative P&L chart, inventory breakdown, and a ranked Top Performers table give the full business picture at a glance.</p>
+        </div>
+        <div class="screen-annotation-tag">Analytics View</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -1539,7 +1621,7 @@ footer {
 <section id="reflection">
   <div class="page">
     <div class="section-label">
-      <span class="section-num">06</span>
+      <span class="section-num">07</span>
       <span class="section-line"></span>
       <span class="section-title-sm">Reflection</span>
     </div>
