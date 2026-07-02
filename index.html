@@ -3,117 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Elias - Portfolio</title>
-    <link rel="stylesheet" href="Stylesheet.css">
+    <title>Elias - Work</title>
+    <link rel="stylesheet" href="work-style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="Img/favicon.png">
 </head>
 <body>
-    <script>
-        const isMobile = window.innerWidth <= 768;
-        sessionStorage.setItem('loadedScene', isMobile ? 'mobile' : 'desktop');
-    </script>
-
-    <div class="spline-container" id="splineContainer">
-        <script type="module" src="https://unpkg.com/@splinetool/viewer@latest/build/spline-viewer.js"></script>
-        <script>
-            const sceneFile = (window.innerWidth <= 768) ? 'scene-mobile.splinecode' : 'scene.splinecode';
-            document.write('<spline-viewer url="' + sceneFile + '"></spline-viewer>');
-            console.log('Loading scene: ' + sceneFile);
-        </script>
-    </div>
-    
-    <div class="info-card" id="infoCard">
-        <h1 class="card-name">Elias.</h1>
-        <div class="card-divider"></div>
-        <p class="card-greeting">
-            Hi, I'm <strong>Elias Mekuria</strong> - a designer and builder based in New York City.
-        </p>
-        <div class="card-divider"></div>
-        <p class="card-bio">
-            I'm exploring the intersection of AI and design to create smarter, faster workflows - using intelligent tools to push the boundaries of what's possible in visual communication and digital experiences.
-        </p>
-        <div class="card-divider"></div>
-        <div class="card-actions">
-            <a href="https://www.linkedin.com/in/elias-mekuria/" class="action-button" target="_blank">LinkedIn</a>
-            <a href="mailto:elijahmekuria@gmail.com" class="action-button">Email↗</a>
+    <!-- Column 1: Left Sidebar - Fixed (Page Info) -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <h1 class="sidebar-intro">
+                Hi, I'm Elias Mekuria —<br>
+                a product designer and builder based in New York City.
+            </h1>
+            <p class="sidebar-bio">
+                I work across the full stack of design: research, UI, and front-end development, with a growing focus on AI-assisted workflows that shrink the gap between idea and shipped product.
+             </p>
+            <nav class="sidebar-links">
+                <a href="https://www.linkedin.com/in/elias-mekuria/" class="sidebar-link">LinkedIn</a>
+                <a href="mailto:elijahmekuria@gmail.com" class="sidebar-link">Email</a>
+            </nav>
         </div>
-    </div>
-    
-    <div class="bottom-section">
-        <p class="interaction-hint">Tap the keyboard to continue</p>
-    </div>
+    </aside>
 
-    <script>
-        var isNavigating = false;
-        var clicksEnabled = false;
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            var viewer = document.querySelector('spline-viewer');
-            var infoCard = document.getElementById('infoCard');
-            var container = document.getElementById('splineContainer');
-            
-            // Wait 1.5 seconds then enable clicks
-            setTimeout(function() {
-                clicksEnabled = true;
-                console.log('✅ Clicks enabled');
-            }, 1500);
-            
-            document.addEventListener('click', function(e) {
-                if (isNavigating || !clicksEnabled) return;
-                if (infoCard && infoCard.contains(e.target)) return;
-                
-                if (e.target.tagName === 'SPLINE-VIEWER' || 
-                    e.target.tagName === 'CANVAS' ||
-                    container.contains(e.target)) {
-                    
-                    console.log('✅ Navigating...');
-                    isNavigating = true;
-                    
-                    var hintText = document.querySelector('.interaction-hint');
-                    if (hintText) {
-                        hintText.textContent = 'Loading...';
-                        hintText.style.opacity = '0';
-                    }
-                    
-                    setTimeout(function() {
-                        window.location.href = 'work.html';
-                    }, 300);
-                }
-            });
-            
-            document.addEventListener('touchend', function(e) {
-                if (isNavigating || !clicksEnabled) return;
-                if (infoCard && infoCard.contains(e.target)) return;
-                
-                if (e.target.tagName === 'SPLINE-VIEWER' || 
-                    e.target.tagName === 'CANVAS' ||
-                    container.contains(e.target)) {
-                    
-                    isNavigating = true;
-                    var hintText = document.querySelector('.interaction-hint');
-                    if (hintText) hintText.style.opacity = '0';
-                    
-                    setTimeout(function() {
-                        window.location.href = 'work.html';
-                    }, 300);
-                }
-            });
-            
-            window.addEventListener('resize', function() {
-                setTimeout(function() {
-                    var currentIsMobile = window.innerWidth <= 768;
-                    var loadedScene = sessionStorage.getItem('loadedScene');
-                    var currentSceneType = currentIsMobile ? 'mobile' : 'desktop';
-                    
-                    if (loadedScene && loadedScene !== currentSceneType) {
-                        location.reload();
-                    }
-                }, 500);
-            });
-        });
-    </script>
+    <!-- Columns 2 & 3: Main Content Area (Project Info + Image) -->
+    <main class="main-content">
+
+        <!-- Project Row 1 - Dial App -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">Dial — Rolex Resale Tracker </h2>
+                <p class="project-meta">Product Design + Engineering <br>2026+</p>
+                <p class="project-description">
+                    A Figma design system and React app built from scratch — inventory management, P&L tracking, and market value for independent Rolex dealers.
+                </p>
+                <a href="project-dial.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-dial.html">
+                    <img src="Img/Dial-Thumbnail.png" alt="Dial Rolex Resale Tracker">
+                </a>
+            </div>
+        </div>
+
+         <!-- Project Row 5 - Zillow -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">UI/UX Casestudy - Zillow Compare</h2>
+                <p class="project-meta">UX Research | UI Design | Illustrative Design | Type Design<br>2023</p>
+                <p class="project-description">This is a case study of a conceptual UI/UX design aimed at optimizing the usage of the Zillow search tool by integrating a new product, for perspective real estate investors.</p>
+                <a href="project-zillow-compare.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-zillow-compare.html">
+                    <img src="Img/Project 5.png" alt="Zillow Compare">
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Row 1 - Front-End Case Studies -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">Front-End Case Studies</h2>
+                <p class="project-meta">Figma Concepting | Frontend Development<br>2024+</p>
+                <p class="project-description">
+                    A selection of real-world builds - blending design and code to bring campaigns to life across screens and devices.
+                </p>
+                <a href="project-detail.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-detail.html">
+                    <img src="Img/Project 1.png" alt="Front-End Case Studies">
+                </a>
+            </div>
+        </div>
+
+         <!-- Project Row 4 - Supreme -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">Supreme Lookbook</h2>
+                <p class="project-meta">Editorial Design | Illustrative Design | Photo Design<br>2022</p>
+                <p class="project-description">A lookbook celebrating Supreme's impact on the fashion industry and beyond.</p>
+                <a href="project-supreme.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-supreme.html">
+                    <img src="Img/Project 4.png" alt="Supreme Lookbook">
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Row 2 - Animated Ads -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">Animated Ads</h2>
+                <p class="project-meta">Motion Graphics | Illustration<br>2024+</p>
+                <p class="project-description">
+                    A selection of animated ad work crafted for a diverse range of brands and industries. Designed to engage audiences across all digital platforms.
+                </p>
+                <a href="project-Animated-Ads.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-Animated-Ads.html">
+                    <img src="Img/Project 2.gif" alt="Animated Ads">
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Row 3 - Megan Thee Stallion -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">MTS - ROCNATION</h2>
+                <p class="project-meta">Illustrative Design | Type Design<br>2022</p>
+                <p class="project-description">
+                    A collection of merchandise designed for the talented artist Megan Thee Stallion.
+                </p>
+                <a href="project-megan.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-megan.html">
+                    <img src="Img/Project 3.gif" alt="Megan Thee Stallion">
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Row 6 - Uptown Boyband -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">Uptown Boyband - Sony Canada</h2>
+                <p class="project-meta">Motion Design | Illustrative Design | Type Design<br>2021</p>
+                <p class="project-description">Design project in collaboration with Sony Canada for an upcoming KPOP group based in Toronto</p>
+                <a href="project-uptown.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-uptown.html">
+                    <img src="Img/Project 6.gif" alt="Uptown Boyband">
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Row 7 - Snoh Aalegra -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">Snoh Aalegra Tour Merch</h2>
+                <p class="project-meta">Type Design | Illustrative Design<br>2022</p>
+                <p class="project-description">This project aims to create a set of merch designs that will serve as an evergreen mode of promotional content for the artist.</p>
+                <a href="project-snoh.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-snoh.html">
+                    <img src="Img/Project 7.png" alt="Snoh Aalegra">
+                </a>
+            </div>
+        </div>
+
+        <!-- Project Row 8 - Shaping The Culture -->
+        <div class="project-row">
+            <div class="project-info">
+                <h2 class="project-title">Shaping The Culture</h2>
+                <p class="project-meta">Type Design | Illustrative Design<br>2022</p>
+                <p class="project-description">Logo & brand identity upgrade for local podcast.</p>
+                <a href="project-shaping.html" class="project-link">See Full Work</a>
+            </div>
+            <div class="project-image">
+                <a href="project-shaping.html">
+                    <img src="Img/Project 8.gif" alt="Shaping The Culture">
+                </a>
+            </div>
+        </div>
+
+    </main>
 </body>
 </html>
