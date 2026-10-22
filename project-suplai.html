@@ -1,0 +1,775 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Suplai Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..700;1,300..700&family=Fragment+Mono&family=DM+Sans:opsz,wght@9..40,400&family=Noto+Sans+Ethiopic:wght@400;500&display=swap">
+<style>
+/* Layout: 12-column product-spec page on cool gray. Every section opens with the same header row (label + headline left, note right), then its content. White and black cards carry content, lime marks the copy that matters, blue is reserved for technical line drawings. Single light look by choice. */
+:root{
+  color-scheme: light;
+  --bg:#E6E8E9;
+  --card:#FFFFFF;
+  --ink:#0E0F10;
+  --ink-2:#56595D;
+  --ink-inv:#F3F4F5;
+  --ink-inv-2:#A3A8AC;
+  --well:#F1F2F3;
+  --well-dark:#1C1E20;
+  --line:rgba(14,15,16,.14);
+  --lime:#D8F31C;
+  --blue:#2F54EB;
+  --blue-2:#DCE4FD;
+  --f:'Host Grotesk','Neue Haas Grotesk Display Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --mono:'Fragment Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  --mark:'DM Sans','Helvetica Neue',Arial,sans-serif;   /* Suplai wordmark only */
+  --geez:'Noto Sans Ethiopic','Nyala',sans-serif;
+  --r-card:22px; --r-inner:14px; --r-obj:12px;
+}
+html,body{background:var(--bg);color:var(--ink)}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{font-family:var(--f);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden;
+  background:radial-gradient(120% 60% at 70% 0%,#F1F2F3 0%,var(--bg) 55%) no-repeat,var(--bg)}
+.wrap{max-width:1320px;margin:0 auto;padding-inline:clamp(16px,3vw,40px)}
+.g12{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px}
+section{position:relative;padding-block:96px}
+h1,h2,h3{margin:0;font-weight:400;text-wrap:balance}
+h2{font-size:clamp(40px,5.2vw,72px);line-height:.98;letter-spacing:-.04em}
+h3{font-size:26px;line-height:1.08;letter-spacing:-.025em}
+p{margin:0}
+.small{font-size:14px;line-height:1.55;color:var(--ink-2)}
+.label{font-size:13px;color:var(--ink-2);display:block}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+a{color:var(--ink)}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.word{font-family:var(--mark);font-weight:400;letter-spacing:-.05em;text-transform:lowercase}
+
+/* shared pieces */
+.hl{white-space:nowrap;background:linear-gradient(var(--lime),var(--lime)) no-repeat 0 0/100% 100%;padding:0 .1em;margin:0 -.04em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.box{display:inline-block;background:var(--lime);padding:2px 12px 4px;font-size:44px;line-height:1;letter-spacing:-.035em}
+.card{background:var(--card);border-radius:var(--r-card);padding:28px;position:relative;min-width:0}
+.card.dark{background:var(--ink);color:var(--ink-inv)}
+.card.dark .label,.card.dark .small,.card.dark .mono{color:var(--ink-inv-2)}
+.well{border-radius:var(--r-inner);background:var(--well);padding:16px;font-size:14px;line-height:1.45}
+.card.dark .well{background:var(--well-dark)}
+.btn{appearance:none;border:0;background:var(--ink);color:#fff;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;height:44px;padding:0 18px;border-radius:4px;cursor:pointer;display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.btn:hover{background:#2A2D30}
+.bignum{font-size:clamp(84px,9vw,140px);line-height:.85;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.specs{border-left:1px solid var(--ink);padding-left:16px;font-family:var(--mono);font-size:11px;letter-spacing:.02em;text-transform:uppercase;line-height:1.45;display:flex;flex-direction:column;gap:12px}
+.q{font-size:12px;padding:3px 9px;border-radius:999px;background:var(--well);color:var(--ink);white-space:nowrap}
+.q.low{background:var(--lime)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chip{padding:6px 10px;border-radius:999px;background:var(--ink);color:#fff;font-size:12px}
+.card.dark .chip{background:var(--ink-inv);color:var(--ink)}
+.chip.ghost{background:transparent;color:var(--ink-2);border:1px solid var(--line);text-decoration:line-through}
+.chip.pay{background:var(--lime);color:var(--ink)}
+.slot{border:1.5px dashed var(--ink);border-radius:var(--r-obj);padding:18px;text-align:center}
+
+/* section header: same on every section */
+.sh{position:relative;align-items:end;margin-bottom:48px}
+.sh-l{grid-column:1/8;display:flex;flex-direction:column;gap:14px}
+.sh-r{grid-column:9/13;max-width:40ch}
+
+/* ---------- top bar ---------- */
+.top{display:flex;justify-content:space-between;align-items:center;padding-block:22px;font-size:13px}
+
+/* ---------- hero ---------- */
+.hero{padding-block:48px 80px}
+.hero h1{font-size:clamp(44px,5.6vw,84px);line-height:.92;letter-spacing:-.045em}
+.hero .sub{font-size:clamp(22px,2.6vw,36px);line-height:1.1;letter-spacing:-.025em;color:var(--ink-2);margin-top:22px;max-width:18ch}
+.hero-l{grid-column:1/4;display:flex;flex-direction:column;align-items:flex-start;gap:18px;padding-top:12px}
+.hero-c{grid-column:4/10}
+.hero-r{grid-column:10/13;padding-top:12px}
+.lede{margin-top:32px;max-width:52ch;font-size:16px;color:var(--ink-2)}
+
+#pile{position:relative;height:500px;margin-top:64px;background:linear-gradient(180deg,#F7F8F8,#ECEEEF);border-radius:var(--r-card);overflow:hidden;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+#pile.grab{cursor:grab}
+#pile .tl{position:absolute;left:24px;top:22px;z-index:5}
+#pile .br{position:absolute;right:20px;bottom:20px;z-index:6}
+.obj{position:absolute;box-sizing:border-box;will-change:transform;transform-origin:50% 50%;box-shadow:0 1px 1px rgba(0,0,0,.06),0 14px 28px -16px rgba(10,14,20,.45)}
+.obj .mono{font-size:10px;display:block;margin-bottom:6px}
+.o-note{background:#fff;border-radius:var(--r-obj);width:200px;padding:14px 16px;font-size:14px;line-height:1.35}
+.o-note .mono{color:var(--ink-2)}
+.o-dark{background:var(--ink);color:var(--ink-inv);border-radius:var(--r-obj);width:210px;padding:14px 16px;font-size:14px;line-height:1.35}
+.o-dark .mono{color:var(--ink-inv-2)}
+.o-sticker{background:var(--lime);border-radius:var(--r-obj);width:118px;padding:12px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.bar{width:100%;height:24px;background:repeating-linear-gradient(90deg,var(--ink) 0 2px,transparent 2px 4px,var(--ink) 4px 5px,transparent 5px 8px,var(--ink) 8px 11px,transparent 11px 12px)}
+.o-sticker .mono{margin:0;font-size:9px}
+.o-receipt{background:#fff;width:150px;padding:14px 14px 18px;font-family:var(--mono);font-size:11px;line-height:1.6;color:#333;
+  -webkit-mask:linear-gradient(#000,#000) top/100% calc(100% - 6px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/10px 6px repeat-x;
+  mask:linear-gradient(#000,#000) top/100% calc(100% - 6px) no-repeat,conic-gradient(from -45deg at bottom,#0000,#000 1deg 89deg,#0000 90deg) bottom/10px 6px repeat-x}
+.o-pill{background:#fff;border-radius:999px;padding:10px 18px;font-family:var(--mono);font-size:12px;white-space:nowrap}
+#found{position:absolute;left:50%;top:50%;width:min(720px,calc(100% - 32px));transform:translate(-50%,-50%);z-index:4;padding:10px;box-shadow:0 30px 60px -30px rgba(10,14,20,.5)}
+.search{display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;border-radius:var(--r-obj);background:var(--well);font-size:15px}
+.res{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:14px;align-items:center;padding:12px 2px;border-bottom:1px solid var(--line);font-size:15px}
+.res small{display:block;font-size:12px;color:var(--ink-2)}
+.res .pr{font-family:var(--mono);font-size:13px}
+
+/* ---------- call log ---------- */
+.log-l{grid-column:1/5}
+.log-r{grid-column:5/13}
+#clock{font-size:clamp(72px,8.5vw,128px);line-height:.82;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+#clockday{margin-top:16px;display:block}
+.logcard{padding:30px 32px}
+.logrow{display:grid;grid-template-columns:64px minmax(0,1.1fr) minmax(0,2fr) 92px;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.12);font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase;line-height:1.6}
+.logrow .r{text-align:right;color:var(--ink-inv-2)}
+.logrow.head{color:var(--ink-inv-2);font-size:10px;padding-top:0}
+.type{display:inline-block}
+.tally{display:flex;flex-wrap:wrap;gap:10px 14px;margin-top:22px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.tally span{background:var(--well-dark);padding:6px 10px;border-radius:4px}
+.tally span.k{background:var(--lime);color:var(--ink)}
+.after{margin-top:28px;font-size:clamp(22px,2.4vw,32px);letter-spacing:-.025em;line-height:1.25}
+
+/* ---------- network ---------- */
+@media (min-width:981px){#web .sh-l{grid-column:1/10}#web .sh-r{grid-column:10/13}#t-web{white-space:nowrap}}
+.net-l{grid-column:1/4;display:flex;flex-direction:column;gap:32px;justify-content:center}
+.net-r{grid-column:4/13}
+.count{font-size:clamp(72px,8vw,120px);line-height:.85;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.netcard{padding:0;overflow:hidden;background-color:#fff;background-image:linear-gradient(var(--blue-2) 1px,transparent 1px),linear-gradient(90deg,var(--blue-2) 1px,transparent 1px);background-size:32px 32px;background-position:-1px -1px}
+#net{display:block;width:100%;height:auto}
+#net text{font-family:var(--mono);font-size:13px;letter-spacing:.04em;text-transform:uppercase;fill:var(--blue)}
+
+/* ---------- decisions ---------- */
+.dgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:minmax(300px,auto);gap:16px}
+.dgrid .tall{grid-row:span 2}
+.dcard{display:flex;flex-direction:column;gap:14px}
+.dcard .well{margin-top:auto}
+.sticker{position:absolute;right:22px;top:22px;background:var(--lime);color:var(--ink);border-radius:var(--r-obj);padding:10px 12px;width:116px;display:flex;flex-direction:column;align-items:center;gap:6px;transform:rotate(6deg);box-shadow:0 10px 24px -14px rgba(0,0,0,.6)}
+.sticker .geez{font-family:var(--geez);font-size:16px;line-height:1}
+.sticker .bar{height:20px}
+
+/* ---------- exploded diagram ---------- */
+.ex-l{grid-column:1/5;display:flex;flex-direction:column;gap:18px;justify-content:center}
+.ex-l p{max-width:44ch}
+.ex-r{grid-column:5/13}
+#iso{display:block;width:100%;height:auto;overflow:visible}
+#iso text{font-family:var(--mono);font-size:12px;letter-spacing:.05em;text-transform:uppercase;fill:var(--blue)}
+#iso text.sub{fill:#5A71D8;font-size:10.5px}
+
+/* ---------- statement ---------- */
+.st-l{grid-column:1/9}
+.st-r{grid-column:9/13}
+.seg{display:inline-flex;background:var(--well);border-radius:999px;padding:4px}
+.seg button{appearance:none;border:0;background:transparent;border-radius:999px;height:36px;padding:0 16px;font:inherit;font-size:13px;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.spec{width:100%;border-collapse:collapse;margin-top:18px}
+.spec th{font-weight:400;font-size:12px;color:var(--ink-2);text-align:right;padding:0 0 10px 12px;border-bottom:1px solid var(--line)}
+.spec th:first-child,.spec td:first-child{text-align:left;padding-left:0}
+.spec td{padding:14px 0 14px 12px;border-bottom:1px solid var(--line);text-align:right;font-size:14px;color:var(--ink-2);font-variant-numeric:tabular-nums;vertical-align:top}
+.spec td:first-child{color:var(--ink)}
+.spec td .g{font-family:var(--geez)}
+.spec td small{display:block;font-size:12px;color:var(--ink-2)}
+.spec tfoot td{color:var(--ink);border-bottom:0;font-weight:500}
+.scroll-x{overflow-x:auto}
+.scroll-x table{min-width:480px}
+
+/* ---------- audit ---------- */
+.agrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.acard{display:flex;flex-direction:column;gap:12px;min-height:340px}
+.acard .bignum{margin-top:auto}
+.was{font-size:14px;color:var(--ink-2)}
+.was s{text-decoration-thickness:2px}
+.status{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:64px;border-top:1px solid var(--ink);padding-top:22px}
+.status .box{font-size:clamp(32px,3.4vw,48px)}
+.status p{margin-top:10px}
+
+.shot-btn{appearance:none;border:0;padding:0;margin:0;background:none;cursor:zoom-in;display:block;width:100%;text-align:left}
+.shot{display:block;width:100%;height:auto;border-radius:var(--r-inner);border:1px solid var(--line);background:#fff}
+.dcard .shot-btn{margin-top:auto}
+.browser{background:#fff;border-radius:var(--r-card);overflow:hidden;box-shadow:0 40px 80px -50px rgba(10,14,20,.45)}
+.browser .chrome{height:38px;display:flex;align-items:center;gap:7px;padding:0 16px;border-bottom:1px solid var(--line)}
+.browser .chrome i{width:10px;height:10px;border-radius:50%;background:#D9DCDE;display:block}
+.browser .chrome span{margin-left:14px;font-family:var(--mono);font-size:11px;color:var(--ink-2)}
+.browser img{display:block;width:100%;height:auto}
+.gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.gallery figure{margin:0;display:flex;flex-direction:column;gap:14px}
+.gallery figcaption{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+#lb{border:0;padding:0;background:transparent;max-width:min(1600px,94vw);max-height:92vh}
+#lb::backdrop{background:rgba(14,15,16,.82)}
+#lb img{display:block;max-width:100%;max-height:86vh;border-radius:var(--r-inner)}
+#lb form{display:flex;justify-content:flex-end;margin-top:10px}
+#lb button{appearance:none;border:0;background:var(--lime);color:var(--ink);font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;height:40px;padding:0 16px;border-radius:4px;cursor:pointer}
+.foot{padding-block:80px 64px;border-top:1px solid var(--ink)}
+.foot .word{font-size:clamp(72px,14vw,220px);line-height:1}
+.foot-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-top:28px}
+
+@media (max-width:980px){
+  .hero-l,.hero-c,.hero-r,.log-l,.log-r,.net-l,.net-r,.ex-l,.ex-r,.st-l,.st-r,.sh-l,.sh-r{grid-column:1/-1}
+  .sh-r{margin-top:18px}
+  .hero-l{flex-direction:row;flex-wrap:wrap;align-items:flex-start;order:2;margin-top:32px}
+  .hero-c{order:1}.hero-r{order:3;margin-top:28px}
+  .net-l{flex-direction:row;flex-wrap:wrap;gap:28px 40px;margin-bottom:28px}
+  .ex-l{margin-bottom:24px}
+  .st-r{margin-top:16px}
+  .log-r{margin-top:28px}
+  .dgrid,.agrid,.gallery{grid-template-columns:minmax(0,1fr)}
+  .dgrid .tall{grid-row:auto}
+  .status{grid-template-columns:repeat(2,minmax(0,1fr))}
+  section{padding-block:80px}
+  #pile{height:540px}
+  .logrow{grid-template-columns:52px minmax(0,1fr);row-gap:2px}
+  .logrow > :nth-child(3){grid-column:2}
+  .logrow .r{grid-column:2;text-align:left}
+  .logrow.head{display:none}
+  .logcard{padding:22px}
+}
+</style>
+
+
+<div class="wrap">
+  <header class="top">
+    <span class="word" style="font-size:20px">suplai</span>
+    <span class="small">Case study</span>
+    <span class="small">Elias Mekuria</span>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="t-hero">
+    <div class="g12">
+      <div class="hero-l">
+        <span class="box">25 h</span>
+        <p class="small" style="max-width:30ch">How long one wholesaler spent finding 500 boxes of a common medicine, the old way. Six contacts, two partial sources, nothing written down.</p>
+      </div>
+      <div class="hero-c">
+        <h1 id="t-hero"><span class="hl">500&nbsp;boxes</span> of&nbsp;omeprazole.</h1>
+        <p class="sub">Six calls, two days and no record of any of it.</p>
+        <p class="lede">Suplai connects licensed pharmaceutical importers in Ethiopia with verified wholesalers. It replaces a trail of calls, clerks and cash with one search that leaves a record.</p>
+      </div>
+      <div class="hero-r">
+        <div class="specs">
+          <div>Role: Technical cofounder</div>
+          <div>Scope: Brand, product, UI, full stack</div>
+          <div>Stack: Next.js · Supabase · Vercel</div>
+          <div>Users: Importers · Wholesalers · Admins</div>
+          <div>Market: Ethiopia</div>
+          <div>Status: Live, partners first</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pile" aria-label="The paperwork from one search: call notes, receipts and a proforma, which you can drag around">
+      <span class="label tl">Paperwork from one order (1)</span>
+      <div class="br"><button class="btn" id="pileBtn" type="button">Search on Suplai <span aria-hidden="true">↗</span></button></div>
+
+      <div class="obj o-note" data-r="-6" style="left:5%;top:110px"><span class="mono">Call · Importer A</span>Out of stock. Try next week.</div>
+      <div class="obj o-receipt" data-r="5" style="left:24%;top:60px">CASH RECEIPT<br>Clerk service<br>ETB 12,000.00<br>No. 00417</div>
+      <div class="obj o-dark" data-r="-3" style="left:40%;top:96px"><span class="mono">Clerk</span>Says he'll call back after lunch.</div>
+      <div class="obj o-sticker" data-r="8" style="left:63%;top:60px"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="#0E0F10" stroke-width="1.4" aria-hidden="true"><circle cx="20" cy="20" r="17"/><ellipse cx="20" cy="20" rx="8" ry="17"/><path d="M3 20h34M6 11h28M6 29h28"/></svg><div class="bar"></div><span class="mono">Proforma 0081</span></div>
+      <div class="obj o-pill" data-r="-9" style="left:78%;top:150px">Taxi · ETB 450</div>
+      <div class="obj o-note" data-r="3" style="left:12%;top:280px"><span class="mono">Call · Importer C</span>No answer. 15:05</div>
+      <div class="obj o-pill" data-r="6" style="left:46%;top:260px">Qty 200 · price on visit</div>
+      <div class="obj o-dark" data-r="-4" style="left:64%;top:300px"><span class="mono">Day 2 · 10:20</span>300 boxes. Cash only, through the clerk.</div>
+      <div class="obj o-note" data-r="-7" style="left:30%;top:340px"><span class="mono">Order note</span>Omeprazole 20mg × 500 by Thursday</div>
+
+      <div id="found" class="card" hidden>
+        <img class="shot" src="Img/suplai/catalog-top.jpg" alt="Suplai catalog: a search bar, today's market pulse (new listings, low stock, price drops) and the first listing with quantity, price, lot and expiry." width="1400" height="867">
+      </div>
+    </div>
+    <p class="small" style="margin-top:14px">Names, prices and figures on this page are samples.</p>
+  </section>
+
+  <!-- PRODUCT -->
+  <section aria-labelledby="t-prod">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">Product (2)</span><h2 id="t-prod">Live at <span class="hl">suplai.co.</span></h2></div>
+      <p class="sh-r small">A marketplace for licensed importers and verified wholesalers. Everything below is the real product, captured from test accounts.</p>
+    </header>
+    <div class="browser">
+      <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>suplai.co</span></div>
+      <button class="shot-btn" type="button" data-full="Img/suplai/landing.jpg"><img src="Img/suplai/landing.jpg" alt="Suplai landing page: 'The pharma supply chain, finally connected.' with a diagram of businesses linked to one hub." width="1800" height="1024"></button>
+    </div>
+  </section>
+
+  <!-- CALL LOG -->
+  <section id="log" aria-labelledby="t-log">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">Reality (3)</span><h2 id="t-log">What one order <span class="hl">cost.</span></h2></div>
+      <p class="sh-r small">A wholesaler's search for one product, the way importers and wholesalers describe it today. Every row is a call, a visit or a wait.</p>
+    </header>
+    <div class="g12" id="logPin">
+      <div class="log-l">
+        <div id="clock" aria-hidden="true">08:59</div>
+        <span id="clockday" class="mono">Day 1</span>
+      </div>
+      <div class="log-r">
+        <div class="card dark logcard">
+          <div class="logrow head"><span>Time</span><span>Who</span><span>What happened</span><span class="r">Result</span></div>
+          <div class="logrow" data-t="09:00" data-d="Day 1"><span class="type">09:00</span><span class="type">Call · Importer A</span><span class="type">"Out of stock. Try next week."</span><span class="type r">Dead end</span></div>
+          <div class="logrow" data-t="09:40" data-d="Day 1"><span class="type">09:40</span><span class="type">Call · Clerk</span><span class="type">"Let me ask around. I'll call back."</span><span class="type r">Waiting</span></div>
+          <div class="logrow" data-t="11:15" data-d="Day 1"><span class="type">11:15</span><span class="type">Visit · Importer B</span><span class="type">200 boxes. Price given in person only.</span><span class="type r">Partial</span></div>
+          <div class="logrow" data-t="14:30" data-d="Day 1"><span class="type">14:30</span><span class="type">Callback · Clerk</span><span class="type">"Importer C might have some." Fee added.</span><span class="type r">Waiting</span></div>
+          <div class="logrow" data-t="15:05" data-d="Day 1"><span class="type">15:05</span><span class="type">Call · Importer C</span><span class="type">No answer.</span><span class="type r">Dead end</span></div>
+          <div class="logrow" data-t="10:20" data-d="Day 2"><span class="type">10:20</span><span class="type">Call · Importer C</span><span class="type">300 boxes. Cash only, through the clerk.</span><span class="type r">Partial</span></div>
+          <div class="tally" id="tally"><span class="k">25 h 20 m</span><span>6 contacts</span><span>2 sources</span><span>0 records</span></div>
+        </div>
+        <p class="after">The same order on Suplai: one search, under a minute, with every step on record.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- NETWORK -->
+  <section id="web" aria-labelledby="t-web">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">System (4)</span><h2 id="t-web">Nineteen lines to <span class="hl">manage.</span></h2></div>
+      <p class="sh-r small">Every wholesaler kept a private map of who might have stock. Clerks filled the gaps and charged for it. Scroll to see what Suplai replaces.</p>
+    </header>
+    <div class="g12" id="webPin">
+      <div class="net-l">
+        <div><div class="count" id="cConn">19</div><span class="mono" style="color:var(--ink-2)">Connections</span></div>
+        <div><div class="count" id="cMid">3</div><span class="mono" style="color:var(--ink-2)">Middlemen</span></div>
+      </div>
+      <div class="net-r">
+        <div class="card netcard">
+          <svg id="net" viewBox="0 0 1000 640" role="img" aria-label="Four importers, five wholesalers and three clerks joined by nineteen tangled lines. As you scroll, the clerks are struck out and every business connects to Suplai through nine direct lines."></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DECISIONS -->
+  <section aria-labelledby="t-dec">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">Decisions (5)</span><h2 id="t-dec">Five decisions that moved work <span class="hl">off the user.</span></h2></div>
+      <p class="sh-r small">Each decision answers a pressure from the market, and each one takes a step away from the people using the product.</p>
+    </header>
+    <div class="dgrid">
+      <div class="card dark dcard tall" id="trust">
+        <span class="label">Trust</span>
+        <div class="sticker" id="sticker" aria-hidden="true"><span class="mono" style="font-size:10px;color:var(--ink)">Verified</span><span class="geez">ተረጋግጧል</span><div class="bar"></div></div>
+        <h3 style="max-width:11ch">Check licenses before anyone gets in.</h3>
+        <p class="small" style="max-width:34ch">Buyers can't vet sellers they've never met, and regulators need to trust everyone. Verification happens once, at the door. After that, every badge in the marketplace means the same thing.</p>
+        <div class="bignum" style="margin-top:28px">2</div>
+        <p class="small">documents per business: EFDA license and trade license. Admins can't approve their own business.</p>
+        <div class="well"><b>Documents under review</b><br><span class="small">EFDA license · uploaded<br>Trade license · uploaded<br>Admin review · in progress</span></div>
+      </div>
+      <div class="card dcard">
+        <span class="label">Negotiation</span>
+        <h3>Inquiry, not checkout.</h3>
+        <p class="small">Pharma deals here are negotiated. A cart with fixed prices fights how people trade.</p>
+        <button class="shot-btn" type="button" data-full="Img/suplai/conversation.jpg"><img class="shot" src="Img/suplai/conversation.jpg" alt="Inquiry thread: a wholesaler offers ETB 38 per box for 150 boxes and the importer asks to confirm the agreement." width="1000" height="413" loading="lazy"></button>
+      </div>
+      <div class="card dcard">
+        <span class="label">Payments</span>
+        <h3>Ship what works today.</h3>
+        <p class="small">Integrated payments weren't cleared yet. Receipt upload shipped in V1, with the processor ready behind it.</p>
+        <button class="shot-btn" type="button" data-full="Img/suplai/payment.jpg"><img class="shot" src="Img/suplai/payment.jpg" alt="Payment step: transfer ETB 1,200 to the importer, then upload a screenshot or PDF of the confirmation." width="1000" height="545" loading="lazy"></button>
+      </div>
+      <div class="card dcard">
+        <span class="label">Compliance</span>
+        <h3>The tax record writes itself.</h3>
+        <p class="small">Compliance usually means extra work, and extra work gets skipped. Every transaction is structured, so the ledger fills in as deals close.</p>
+        <button class="shot-btn" type="button" data-full="Img/suplai/fee-confirmed.jpg"><img class="shot" src="Img/suplai/fee-confirmed.jpg" alt="Confirmed order record: quantity, price, order value and the 2% platform fee, dated when both sides agreed." width="1000" height="326" loading="lazy"></button>
+      </div>
+      <div class="card dcard">
+        <span class="label">The fee</span>
+        <h3>2%, with a receipt.</h3>
+        <p class="small">A new fee reads as a new tax on thin margins. Suplai's fee replaces what clerks already charge, and it's on record.</p>
+        <button class="shot-btn" type="button" data-full="Img/suplai/fee-summary.jpg"><img class="shot" src="Img/suplai/fee-summary.jpg" alt="Importer orders summary: total order value, the 2% fee billed monthly, and fulfilled orders." width="1400" height="290" loading="lazy"></button>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPLODED -->
+  <section id="explode" aria-labelledby="t-ex">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">Architecture (6)</span><h2 id="t-ex">One card on top. <span class="hl">Four layers</span> underneath.</h2></div>
+      <p class="sh-r small">A wholesaler sees a product, a stock level and a price. Each layer under that card has to hold before the card can be trusted.</p>
+    </header>
+    <div class="g12">
+      <div class="ex-l">
+        <p class="small">Verification decides who is allowed in. Access rules in the database decide what each business can read. The transaction record ties every inquiry, agreement and payment to both parties. The tax ledger turns those records into summaries without anyone filling in a form.</p>
+        <p class="small"><b style="color:var(--ink);font-weight:500">None of it shows up on screen.</b> That is the point.</p>
+      </div>
+      <div class="ex-r">
+        <svg id="iso" viewBox="0 0 900 720" role="img" aria-label="Exploded diagram: the catalog card on top, then verification, access rules, transaction record and tax ledger layers stacked underneath."></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section aria-labelledby="t-st">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">Ledger (7)</span><h2 id="t-st">Built for the calendar <span class="hl">people use.</span></h2></div>
+      <p class="sh-r small">Tax summaries come in the Ethiopian fiscal year by default, with Gregorian one tap away.</p>
+    </header>
+    <div class="g12">
+      <div class="st-l">
+        <div class="card">
+          <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;align-items:flex-start">
+            <div><span class="label">Annual statement</span><h3 style="margin-top:8px">Sample Wholesale Co.</h3><p class="small" id="fy" style="margin-top:6px">Fiscal year 2018 EC</p></div>
+            <div class="seg" role="group" aria-label="Calendar"><button type="button" id="calEth" aria-pressed="true">Ethiopian</button><button type="button" id="calGreg" aria-pressed="false">Gregorian</button></div>
+          </div>
+          <div class="scroll-x">
+            <table class="spec">
+              <thead><tr><th>Quarter</th><th>Orders</th><th>Gross ETB</th><th>Withholding 2%</th></tr></thead>
+              <tbody id="qbody"></tbody>
+              <tfoot><tr><td>Total</td><td id="tTx"></td><td id="tG"></td><td id="tW"></td></tr></tfoot>
+            </table>
+          </div>
+          <p class="small" style="margin-top:16px">Withholding tax is shown apart from Suplai's own 2% fee. The two rates match by coincidence.</p>
+        </div>
+      </div>
+      <div class="st-r">
+        <div class="card dark" style="height:100%;box-sizing:border-box;display:flex;flex-direction:column;gap:18px">
+          <span class="label">Calendar</span>
+          <div class="bignum">13</div>
+          <h3>months in the Ethiopian year.</h3>
+          <p class="small">The fiscal year starts on Hamle 1, in early July. Businesses think in that calendar, so their summaries do too.</p>
+          <p class="mono" style="margin-top:auto;font-size:11px">Hamle 1, 2017 EC = July 8, 2025</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INSIDE -->
+  <section aria-labelledby="t-in">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">Inside the product (8)</span><h2 id="t-in">Two roles, <span class="hl">one record.</span></h2></div>
+      <p class="sh-r small">Importers manage stock and fulfil orders. Wholesalers search, negotiate and pay. Both read from the same transactions. Select a screen to enlarge it.</p>
+    </header>
+    <div class="gallery">
+      <figure><button class="shot-btn" type="button" data-full="Img/suplai/login.jpg"><img class="shot" src="Img/suplai/login.jpg" alt="Sign-in page with a market pulse panel showing new listings, low stock and price drops before login." width="1600" height="914" loading="lazy"></button><figcaption><span>Sign in</span><span class="small">The market, before you log in</span></figcaption></figure>
+      <figure><button class="shot-btn" type="button" data-full="Img/suplai/listings.jpg"><img class="shot" src="Img/suplai/listings.jpg" alt="Importer listings table with product, lot and expiry, quantity, minimum order, price and status." width="1600" height="915" loading="lazy"></button><figcaption><span>Importer · My listings</span><span class="small">Lot, expiry and stock in one table</span></figcaption></figure>
+      <figure><button class="shot-btn" type="button" data-full="Img/suplai/orders-wholesaler.jpg"><img class="shot" src="Img/suplai/orders-wholesaler.jpg" alt="Wholesaler orders page with totals and a list of orders awaiting payment." width="1600" height="918" loading="lazy"></button><figcaption><span>Wholesaler · My orders</span><span class="small">What's owed and to whom</span></figcaption></figure>
+      <figure><button class="shot-btn" type="button" data-full="Img/suplai/orders-importer.jpg"><img class="shot" src="Img/suplai/orders-importer.jpg" alt="Importer orders page with total order value, platform fees and orders pending delivery." width="1600" height="914" loading="lazy"></button><figcaption><span>Importer · Orders</span><span class="small">Fees on record, per order</span></figcaption></figure>
+    </div>
+  </section>
+
+  <!-- AUDIT -->
+  <section aria-labelledby="t-au">
+    <header class="sh g12">
+      <div class="sh-l"><span class="label">Audit (9)</span><h2 id="t-au">I audited <span class="hl">what I shipped.</span></h2></div>
+      <p class="sh-r small">After launch I reviewed the product the way I'd review someone else's. Three findings, three fixes.</p>
+    </header>
+    <div class="agrid">
+      <div class="card acard"><span class="mono" style="color:var(--ink-2)">01</span><h3>Styling systems</h3><p class="small">Moving fast left design tokens, hardcoded hex and default Tailwind side by side. You can see it above: the payment box is blue and the confirmation is green. Consolidating to one token set.</p><div class="bignum">1</div><p class="was">was <s>3</s></p></div>
+      <div class="card acard"><span class="mono" style="color:var(--ink-2)">02</span><h3>Status pill builds</h3><p class="small">The same idea was built four different ways. One shared component now owns every status.</p><div class="bignum">1</div><p class="was">was <s>4</s></p></div>
+      <div class="card dark acard"><span class="mono">03</span><h3>In-app notifications</h3><p class="small">Updates only went out by email. A notification center is next, so deals don't stall in an inbox.</p><div class="bignum" style="color:var(--lime)">Next</div><p class="was" style="color:var(--ink-inv-2)">was email only</p></div>
+    </div>
+    <div class="status">
+      <div><span class="box">[<span data-count="24">24</span>]</span><p class="small">businesses applied</p></div>
+      <div><span class="box">[<span data-count="9">9</span>]</span><p class="small">verified and live</p></div>
+      <div><span class="box">[<span data-count="340">340</span>]</span><p class="small">products listed</p></div>
+      <div><span class="box">2</span><p class="small">calendars, one ledger</p></div>
+    </div>
+    <p class="small" style="margin-top:16px">Bracketed numbers are placeholders. Live quietly for now: partners first, public launch after.</p>
+  </section>
+
+  <dialog id="lb" aria-label="Enlarged screen"><img id="lbImg" alt=""><form method="dialog"><button type="submit">Close</button></form></dialog>
+
+  <footer class="foot">
+    <div class="word" aria-hidden="true">suplai</div>
+    <div class="foot-row">
+      <p class="small" style="max-width:40ch">Designed and built by Elias Mekuria, technical cofounder. B2B pharmaceutical supply for Ethiopia.</p>
+      <a class="btn" href="project-dial.html">Next case study <span aria-hidden="true">↗</span></a>
+    </div>
+  </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.3.26/dist/lenis.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/matter-js@0.20.0/build/matter.min.js"></script>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var G = window.gsap, ST = window.ScrollTrigger, hasG = !!(G && ST);
+  if (hasG) G.registerPlugin(ST);
+  var $ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
+  function clamp(v) { return Math.max(0, Math.min(1, v)); }
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+
+  /* smooth scroll */
+  if (!reduce && hasG && window.Lenis) {
+    var lenis = new Lenis({ lerp: 0.09 });
+    lenis.on('scroll', ST.update);
+    G.ticker.add(function (t) { lenis.raf(t * 1000); });
+    G.ticker.lagSmoothing(0);
+  }
+
+  /* highlighter swipes */
+  if (hasG && !reduce) {
+    $('.hl').forEach(function (h) {
+      G.fromTo(h, { backgroundSize: '0% 100%' }, { backgroundSize: '100% 100%', duration: .7, ease: 'power2.inOut', scrollTrigger: { trigger: h, start: 'top 85%', once: true } });
+    });
+  }
+
+  /* 1. paperwork pile (Matter.js) */
+  (function () {
+    var stage = document.getElementById('pile'), btn = document.getElementById('pileBtn'), found = document.getElementById('found');
+    var objs = $('.obj', stage), cleared = false;
+    objs.forEach(function (o) { o.style.transform = 'rotate(' + (o.dataset.r || 0) + 'deg)'; });
+
+    function showFound(on) {
+      if (on) {
+        found.hidden = false;
+        if (hasG && !reduce) G.fromTo(found, { xPercent: -50, yPercent: -50, x: 0, y: -280, rotation: -3, opacity: 0 }, { xPercent: -50, yPercent: -50, x: 0, y: 0, rotation: 0, opacity: 1, duration: .9, ease: 'back.out(1.1)', delay: .3 });
+      } else if (hasG && !reduce) G.to(found, { y: -40, opacity: 0, duration: .3, onComplete: function () { found.hidden = true; } });
+      else found.hidden = true;
+    }
+    function label() { btn.innerHTML = cleared ? 'Bring back the paperwork <span aria-hidden="true">↺</span>' : 'Search on Suplai <span aria-hidden="true">↗</span>'; }
+
+    if (!window.Matter || reduce) {
+      btn.addEventListener('click', function () { cleared = !cleared; objs.forEach(function (o) { o.hidden = cleared; }); showFound(cleared); label(); });
+      return;
+    }
+    var M = Matter, E = M.Engine, B = M.Bodies, C = M.Composite, Body = M.Body;
+    var engine = E.create(); engine.gravity.y = 1.15;
+    var W = stage.clientWidth, H = stage.clientHeight;
+    var floor = B.rectangle(W / 2, H + 30, W * 3, 60, { isStatic: true, friction: .9 });
+    var lw = B.rectangle(-30, H / 2, 60, H * 6, { isStatic: true }), rw = B.rectangle(W + 30, H / 2, 60, H * 6, { isStatic: true });
+    C.add(engine.world, [floor, lw, rw]);
+    var items = objs.map(function (o) {
+      var w = o.offsetWidth, h = o.offsetHeight;
+      var x = Math.max(w / 2 + 4, Math.min(W - w / 2 - 4, o.offsetLeft + w / 2)), y = o.offsetTop + h / 2;
+      var b = B.rectangle(x, y, w, h, { angle: (parseFloat(o.dataset.r) || 0) * Math.PI / 180, restitution: .1, friction: .5, frictionAir: .025, density: .0012, chamfer: { radius: Math.min(10, h / 2 - 1) } });
+      o.style.left = '0px'; o.style.top = '0px';
+      return { o: o, b: b, w: w, h: h };
+    });
+    C.add(engine.world, items.map(function (i) { return i.b; }));
+    function sync() { items.forEach(function (i) { var p = i.b.position; i.o.style.transform = 'translate(' + (p.x - i.w / 2).toFixed(1) + 'px,' + (p.y - i.h / 2).toFixed(1) + 'px) rotate(' + i.b.angle.toFixed(4) + 'rad)'; }); }
+    sync();
+    if (window.matchMedia('(pointer: fine)').matches) {
+      var mouse = M.Mouse.create(stage);
+      ['wheel', 'mousewheel', 'DOMMouseScroll'].forEach(function (ev) { stage.removeEventListener(ev, mouse.mousewheel); });
+      C.add(engine.world, M.MouseConstraint.create(engine, { mouse: mouse, constraint: { stiffness: .18, damping: .12, render: { visible: false } } }));
+      stage.classList.add('grab');
+    }
+    var vis = true, last = performance.now();
+    new IntersectionObserver(function (e) { vis = e[0].isIntersecting; }).observe(stage);
+    (function loop(now) { var dt = Math.min(32, now - last); last = now; if (vis) { E.update(engine, dt); sync(); } requestAnimationFrame(loop); })(last);
+    window.addEventListener('resize', function () { W = stage.clientWidth; H = stage.clientHeight; Body.setPosition(floor, { x: W / 2, y: H + 30 }); Body.setPosition(rw, { x: W + 30, y: H / 2 }); });
+    btn.addEventListener('click', function () {
+      cleared = !cleared;
+      if (cleared) {
+        C.remove(engine.world, floor);
+        items.forEach(function (i) { Body.setVelocity(i.b, { x: (Math.random() - .5) * 6, y: -4 - Math.random() * 4 }); Body.setAngularVelocity(i.b, (Math.random() - .5) * .2); });
+      } else {
+        C.add(engine.world, floor);
+        items.forEach(function (i, k) { Body.setPosition(i.b, { x: 80 + Math.random() * (W - 160), y: -80 - k * 70 }); Body.setVelocity(i.b, { x: 0, y: 0 }); Body.setAngle(i.b, (Math.random() - .5) * .6); });
+      }
+      showFound(cleared); label();
+    });
+  })();
+
+  /* 2. call log typed in on scroll */
+  (function () {
+    if (!hasG || reduce) return;
+    var rows = $('#log .logrow:not(.head)'), clock = document.getElementById('clock'), day = document.getElementById('clockday');
+    G.matchMedia().add({ d: '(min-width: 981px)', m: '(max-width: 980px)' }, function (c) {
+      var tl = G.timeline({ scrollTrigger: {
+        trigger: '#logPin', start: c.conditions.d ? 'top 12%' : 'top 70%', end: c.conditions.d ? '+=900' : 'bottom 70%', scrub: .5, pin: c.conditions.d,
+        onUpdate: function (s) { var n = Math.min(rows.length, Math.floor(s.progress * rows.length * 1.1)); clock.textContent = n ? rows[n - 1].dataset.t : '08:59'; day.textContent = n ? rows[n - 1].dataset.d : 'Day 1'; }
+      } });
+      rows.forEach(function (r) { tl.fromTo($('.type', r), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', ease: 'steps(20)', duration: 1, stagger: .22 }); });
+      tl.fromTo('#tally span', { opacity: 0, y: 8 }, { opacity: 1, y: 0, stagger: .15, duration: .6 });
+    });
+  })();
+
+  /* 3. network diagram (SVG, blue line) */
+  (function () {
+    var svg = document.getElementById('net');
+    var before = { I1:[120,110], I2:[820,130], I3:[190,500], I4:[860,480], W1:[460,80], W2:[680,260], W3:[320,310], W4:[540,560], W5:[900,310], C1:[280,180], C2:[740,430], C3:[500,380] };
+    var after  = { I1:[150,100], I2:[150,250], I3:[150,400], I4:[150,550], W1:[850,80], W2:[850,200], W3:[850,320], W4:[850,440], W5:[850,560], C1:[500,320], C2:[500,320], C3:[500,320] };
+    var names = { I1:'Importer A', I2:'Importer B', I3:'Importer C', I4:'Importer D', W1:'Wholesaler 1', W2:'Wholesaler 2', W3:'Wholesaler 3', W4:'Wholesaler 4', W5:'Wholesaler 5', C1:'Clerk', C2:'Broker', C3:'Clerk' };
+    var tangle = [['W1','C1'],['C1','I1'],['C1','I3'],['W3','C1'],['W3','I3'],['W2','I2'],['W2','C3'],['C3','I3'],['C3','I4'],['W4','C3'],['W4','C2'],['C2','I4'],['C2','I2'],['W5','I2'],['W5','C2'],['W1','I2'],['W3','C3'],['W2','C2'],['W5','I4']];
+    var biz = ['I1','I2','I3','I4','W1','W2','W3','W4','W5'];
+    var gT = el('g', {}, svg), gH = el('g', {}, svg), gN = el('g', {}, svg);
+    var tLines = tangle.map(function (e) { var viaC = e[0][0] === 'C' || e[1][0] === 'C'; return { e: e, n: el('line', { stroke: '#2F54EB', 'stroke-width': 1.2, 'stroke-dasharray': viaC ? '5 5' : 'none' }, gT) }; });
+    var hLines = biz.map(function (k) { return { k: k, n: el('line', { stroke: '#2F54EB', 'stroke-width': 2 }, gH) }; });
+    var hub = el('g', {}, gN);
+    var hubC = el('circle', { r: 0, fill: '#2F54EB' }, hub);
+    var hubRing = el('circle', { r: 0, fill: 'none', stroke: '#2F54EB', 'stroke-width': 1, 'stroke-dasharray': '3 4' }, hub);
+    var hubT = el('text', { 'text-anchor': 'middle', y: 6, style: 'font-family:\'DM Sans\',sans-serif;font-size:24px;letter-spacing:-1.2px;text-transform:none;fill:#fff' }, hub); hubT.textContent = 'suplai';
+    var nodes = Object.keys(names).map(function (k) {
+      var g = el('g', {}, gN), isC = k[0] === 'C', isI = k[0] === 'I';
+      var shape = isI ? el('rect', { x: -7, y: -7, width: 14, height: 14, fill: '#DCE4FD', stroke: '#2F54EB', 'stroke-width': 1.5 }, g)
+                      : el('circle', { r: 7, fill: isC ? '#fff' : '#fff', stroke: '#2F54EB', 'stroke-width': 1.5, 'stroke-dasharray': isC ? '3 3' : 'none' }, g);
+      var right = (before[k][0] > 500);
+      var t = el('text', { x: isI ? 14 : -14, y: 4, 'text-anchor': isI ? 'start' : 'end' }, g); t.textContent = names[k];
+      var strike = isC ? el('line', { stroke: '#0E0F10', 'stroke-width': 2.5, x1: -60, y1: 0, x2: -60, y2: 0 }, g) : null;
+      return { k: k, g: g, t: t, strike: strike, isC: isC, isI: isI };
+    });
+    var cConn = document.getElementById('cConn'), cMid = document.getElementById('cMid');
+    function P(k, t) { return [lerp(before[k][0], after[k][0], t), lerp(before[k][1], after[k][1], t)]; }
+    function draw(p) {
+      var m = ease(clamp((p - .2) / .55));
+      tLines.forEach(function (l) { var a = P(l.e[0], m), b = P(l.e[1], m); l.n.setAttribute('x1', a[0]); l.n.setAttribute('y1', a[1]); l.n.setAttribute('x2', b[0]); l.n.setAttribute('y2', b[1]); l.n.setAttribute('opacity', 1 - clamp((p - .3) / .3)); });
+      var hp = clamp((p - .55) / .4);
+      hLines.forEach(function (l, i) {
+        var a = after[l.k], len = Math.hypot(a[0] - 500, a[1] - 320), d = clamp(hp * 1.6 - i * .07);
+        l.n.setAttribute('x1', 500); l.n.setAttribute('y1', 320); l.n.setAttribute('x2', a[0]); l.n.setAttribute('y2', a[1]);
+        l.n.setAttribute('stroke-dasharray', len); l.n.setAttribute('stroke-dashoffset', len * (1 - d));
+      });
+      var hr = 58 * ease(clamp((p - .5) / .3));
+      hubC.setAttribute('cx', 500); hubC.setAttribute('cy', 320); hubC.setAttribute('r', hr);
+      hubRing.setAttribute('cx', 500); hubRing.setAttribute('cy', 320); hubRing.setAttribute('r', hr ? hr + 14 : 0);
+      hubT.setAttribute('x', 500); hubT.setAttribute('y', 327); hubT.setAttribute('opacity', clamp((p - .7) / .15));
+      nodes.forEach(function (n) {
+        var a = P(n.k, m);
+        n.g.setAttribute('transform', 'translate(' + a[0] + ',' + a[1] + ')');
+        if (n.isC) {
+          var s = clamp((p - .1) / .2), w = n.t.getComputedTextLength ? n.t.getComputedTextLength() : 50;
+          n.strike.setAttribute('x1', -14 - w - 4); n.strike.setAttribute('x2', -14 - w - 4 + (w + 8) * s);
+          n.g.setAttribute('opacity', 1 - clamp((p - .35) / .25));
+        } else {
+          var side = after[n.k][0] > 500;
+          if (!n.isI) { n.t.setAttribute('text-anchor', m > .5 && side ? 'start' : 'end'); n.t.setAttribute('x', m > .5 && side ? 16 : -14); }
+        }
+      });
+      var conn = Math.round(lerp(19, 9, ease(clamp((p - .3) / .5)))), mid = Math.round(lerp(3, 0, clamp((p - .1) / .45)));
+      cConn.textContent = conn; cMid.textContent = mid;
+    }
+    draw(0);
+    if (hasG) {
+      G.matchMedia().add({ d: '(min-width: 981px)', m: '(max-width: 980px)' }, function (c) {
+        ST.create({ trigger: c.conditions.d ? '#webPin' : '#net', start: c.conditions.d ? 'top 10%' : 'top 70%', end: c.conditions.d ? '+=900' : 'bottom 30%', pin: c.conditions.d, scrub: reduce ? true : .6, onUpdate: function (s) { draw(s.progress); } });
+      });
+    } else draw(1);
+  })();
+
+  /* 4. verified sticker slaps on */
+  if (hasG && !reduce) {
+    G.fromTo('#sticker', { scale: 1.9, rotation: -14, opacity: 0, y: -30 }, { scale: 1, rotation: 6, opacity: 1, y: 0, duration: .45, ease: 'back.out(2.2)', scrollTrigger: { trigger: '#trust', start: 'top 70%', once: true } });
+  }
+
+  /* 5. exploded isometric diagram */
+  (function () {
+    var svg = document.getElementById('iso');
+    var Wd = 300, Dd = 200, T = 7, cx = 330, c30 = Math.cos(Math.PI / 6), s30 = .5;
+    var layers = [
+      { name: 'Catalog card', sub: 'What the wholesaler sees', fill: '#FFFFFF', draw: card },
+      { name: 'Verification', sub: 'EFDA + trade license, admin review', fill: '#F3F6FF', draw: verify },
+      { name: 'Access rules', sub: 'Row-level security per business', fill: '#F3F6FF', draw: access },
+      { name: 'Transaction record', sub: 'Inquiry · terms · payment proof', fill: '#F3F6FF', draw: record },
+      { name: 'Tax ledger', sub: 'Per transaction, two calendars', fill: '#F3F6FF', draw: ledger }
+    ];
+    function iso(u, v, z, cy) { var x = (u - .5) * Wd, y = (v - .5) * Dd; return [cx + (x - y) * c30, cy + (x + y) * s30 - z]; }
+    function poly(pts) { return pts.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); }
+    function rect(u0, v0, u1, v1, z, cy) { return poly([iso(u0, v0, z, cy), iso(u1, v0, z, cy), iso(u1, v1, z, cy), iso(u0, v1, z, cy)]); }
+    function card(g, z, cy) {
+      el('polygon', { points: rect(.07, .12, .62, .24, z, cy), fill: '#DCE4FD' }, g);
+      el('polygon', { points: rect(.07, .32, .45, .4, z, cy), fill: '#DCE4FD' }, g);
+      el('polygon', { points: rect(.7, .12, .93, .24, z, cy), fill: '#D8F31C', stroke: '#2F54EB', 'stroke-width': .8 }, g);
+      el('polygon', { points: rect(.58, .72, .93, .88, z, cy), fill: '#2F54EB' }, g);
+      el('polygon', { points: rect(.07, .74, .38, .84, z, cy), fill: '#DCE4FD' }, g);
+    }
+    function verify(g, z, cy) {
+      [[.08, .44], [.54, .9]].forEach(function (r) {
+        el('polygon', { points: rect(r[0], .14, r[1], .86, z, cy), fill: '#fff', stroke: '#2F54EB', 'stroke-width': 1 }, g);
+        for (var i = 0; i < 4; i++) el('polygon', { points: rect(r[0] + .05, .26 + i * .13, r[1] - .08, .3 + i * .13, z, cy), fill: '#B9C8FA' }, g);
+      });
+      var a = iso(.62, .7, z, cy), b = iso(.7, .78, z, cy), c = iso(.84, .56, z, cy);
+      el('polyline', { points: poly([a, b, c]), fill: 'none', stroke: '#2F54EB', 'stroke-width': 2.4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
+    }
+    function access(g, z, cy) {
+      var on = [[0,0],[1,1],[2,2],[3,3],[4,0],[5,1],[0,2],[2,0],[4,2],[1,3],[5,3],[3,1]];
+      for (var i = 0; i < 6; i++) for (var j = 0; j < 4; j++) {
+        var hit = on.some(function (o) { return o[0] === i && o[1] === j; });
+        el('polygon', { points: rect(.06 + i * .148, .08 + j * .21, .06 + i * .148 + .13, .08 + j * .21 + .18, z, cy), fill: hit ? '#2F54EB' : '#fff', stroke: '#2F54EB', 'stroke-width': .8 }, g);
+      }
+    }
+    function record(g, z, cy) {
+      var a = iso(.12, .12, z, cy), b = iso(.12, .88, z, cy);
+      el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: '#2F54EB', 'stroke-width': 1 }, g);
+      for (var i = 0; i < 4; i++) {
+        var v = .18 + i * .2, d = iso(.12, v, z, cy);
+        el('circle', { cx: d[0], cy: d[1], r: 4, fill: i === 3 ? '#D8F31C' : '#2F54EB', stroke: '#2F54EB' }, g);
+        el('polygon', { points: rect(.22, v - .04, i % 2 ? .7 : .86, v + .04, z, cy), fill: '#B9C8FA' }, g);
+      }
+    }
+    function ledger(g, z, cy) {
+      for (var i = 0; i < 4; i++) for (var j = 0; j < 5; j++) {
+        el('polygon', { points: rect(.06 + i * .22, .08 + j * .17, .06 + i * .22 + .2, .08 + j * .17 + .15, z, cy), fill: (i === 3 && j > 0) ? '#B9C8FA' : (j === 0 ? '#DCE4FD' : '#fff'), stroke: '#2F54EB', 'stroke-width': .8 }, g);
+      }
+    }
+    var root = el('g', {}, svg);
+    function render(t) {
+      while (root.firstChild) root.removeChild(root.firstChild);
+      var gap = lerp(12, 112, ease(t));
+      var n = layers.length;
+      var guides = el('g', {}, root);
+      for (var i = n - 1; i >= 0; i--) {
+        var z = (n - 1 - i) * gap, cy = 360 + (n - 1) * gap / 2;
+        var g = el('g', {}, root), L = layers[i];
+        // side faces
+        el('polygon', { points: poly([iso(0, 1, z, cy), iso(1, 1, z, cy), iso(1, 1, z - T, cy), iso(0, 1, z - T, cy)]), fill: '#B9C8FA', stroke: '#2F54EB', 'stroke-width': 1 }, g);
+        el('polygon', { points: poly([iso(1, 0, z, cy), iso(1, 1, z, cy), iso(1, 1, z - T, cy), iso(1, 0, z - T, cy)]), fill: '#DCE4FD', stroke: '#2F54EB', 'stroke-width': 1 }, g);
+        el('polygon', { points: rect(0, 0, 1, 1, z, cy), fill: L.fill, stroke: '#2F54EB', 'stroke-width': 1.3 }, g);
+        L.draw(g, z, cy);
+        // callout from right corner
+        var rc = iso(1, 0, z, cy), lx = 640;
+        el('line', { x1: rc[0] + 6, y1: rc[1], x2: lx - 8, y2: rc[1], stroke: '#2F54EB', 'stroke-width': 1 }, g);
+        el('polygon', { points: poly([[rc[0] + 6, rc[1]], [rc[0] + 14, rc[1] - 4], [rc[0] + 14, rc[1] + 4]]), fill: '#2F54EB' }, g);
+        var tx = el('text', { x: lx, y: rc[1] + 4 }, g); tx.textContent = L.name;
+        var st = el('text', { x: lx, y: rc[1] + 20, 'class': 'sub' }, g); st.textContent = L.sub;
+        // dashed guides to the layer below
+        if (i < n - 1 && gap > 30) {
+          var z2 = z - gap;
+          [[0, 1], [1, 1]].forEach(function (c) {
+            var a = iso(c[0], c[1], z - T, cy), b = iso(c[0], c[1], z2, cy);
+            el('line', { x1: a[0], y1: a[1], x2: b[0], y2: b[1], stroke: '#2F54EB', 'stroke-width': 1, 'stroke-dasharray': '4 5', opacity: clamp((gap - 30) / 50) }, guides);
+          });
+        }
+      }
+    }
+    render(hasG && !reduce ? 0 : 1);
+    if (hasG && !reduce) ST.create({ trigger: '#iso', start: 'top 80%', end: 'bottom 60%', scrub: .6, onUpdate: function (s) { render(s.progress); } });
+  })();
+
+  /* 6. statement */
+  (function () {
+    var q = [
+      { e: ['ሐምሌ 1 – መስከረም 30', 'Hamle 1 to Meskerem 30'], g: 'Jul 8 to Oct 10', tx: 42, gross: 3980000 },
+      { e: ['ጥቅምት 1 – ታኅሣሥ 30', 'Tikimt 1 to Tahsas 30'], g: 'Oct 11 to Jan 8', tx: 58, gross: 5412000 },
+      { e: ['ጥር 1 – መጋቢት 30', 'Tir 1 to Megabit 30'], g: 'Jan 9 to Apr 8', tx: 71, gross: 6870500 },
+      { e: ['ሚያዝያ 1 – ሰኔ 30', 'Miyazia 1 to Sene 30'], g: 'Apr 9 to Jul 7', tx: 66, gross: 6205000 }
+    ];
+    var f = function (n) { return Math.round(n).toLocaleString('en-US'); };
+    var tb = document.getElementById('qbody'), fy = document.getElementById('fy'), bE = document.getElementById('calEth'), bG = document.getElementById('calGreg');
+    function render(eth, anim) {
+      tb.innerHTML = q.map(function (r, i) {
+        var lab = eth ? '<span class="g">' + r.e[0] + '</span><small>Q' + (i + 1) + ' · ' + r.e[1] + '</small>' : 'Q' + (i + 1) + '<small>' + r.g + '</small>';
+        return '<tr><td>' + lab + '</td><td>' + r.tx + '</td><td>' + f(r.gross) + '</td><td>' + f(r.gross * .02) + '</td></tr>';
+      }).join('');
+      fy.textContent = (eth ? 'Fiscal year 2018 EC' : 'Fiscal year 2025/26') + ' · Sample Wholesale Co.';
+      bE.setAttribute('aria-pressed', eth); bG.setAttribute('aria-pressed', !eth);
+      if (anim && hasG && !reduce) G.fromTo($('td:first-child', tb), { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: .4, stagger: .05, ease: 'power3.out' });
+    }
+    var tx = 0, gr = 0; q.forEach(function (r) { tx += r.tx; gr += r.gross; });
+    document.getElementById('tTx').textContent = tx; document.getElementById('tG').textContent = f(gr); document.getElementById('tW').textContent = f(gr * .02);
+    bE.addEventListener('click', function () { render(true, true); });
+    bG.addEventListener('click', function () { render(false, true); });
+    render(true, false);
+  })();
+
+  /* 7. counts */
+  if (hasG && !reduce) {
+    $('[data-count]').forEach(function (e) {
+      var end = +e.dataset.count, o = { v: 0 };
+      G.to(o, { v: end, duration: 1.2, ease: 'power2.out', onUpdate: function () { e.textContent = Math.round(o.v); }, scrollTrigger: { trigger: e, start: 'top 90%', once: true } });
+    });
+  }
+  if (hasG && document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ST.refresh(); });
+})();
+</script>
+<script>
+(function () {
+  var lb = document.getElementById('lb'), img = document.getElementById('lbImg');
+  document.querySelectorAll('.shot-btn').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var src = b.getAttribute('data-full'), inner = b.querySelector('img');
+      if (!lb.showModal) { window.open(src, '_blank'); return; }
+      img.src = src; img.alt = inner ? inner.alt : '';
+      lb.showModal();
+    });
+  });
+  lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+})();
+</script>
+
+</body></html>
